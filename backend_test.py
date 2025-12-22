@@ -50,17 +50,17 @@ class VelvetRoomAPITester:
 
         try:
             if method == 'GET':
-                response = requests.get(url, headers=default_headers)
+                response = requests.get(url, headers=default_headers, verify=False, timeout=30)
             elif method == 'POST':
                 if files or data:
                     # For form data, don't use json parameter
-                    response = requests.post(url, data=data, files=files, headers=default_headers)
+                    response = requests.post(url, data=data, files=files, headers=default_headers, verify=False, timeout=30)
                 else:
-                    response = requests.post(url, json=data, headers=default_headers)
+                    response = requests.post(url, json=data, headers=default_headers, verify=False, timeout=30)
             elif method == 'DELETE':
-                response = requests.delete(url, headers=default_headers)
+                response = requests.delete(url, headers=default_headers, verify=False, timeout=30)
             elif method == 'PUT':
-                response = requests.put(url, json=data, headers=default_headers)
+                response = requests.put(url, json=data, headers=default_headers, verify=False, timeout=30)
             
             return response
         except Exception as e:
