@@ -34,6 +34,7 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
+              <LanguageSelector />
               {user ? (
                 <>
                   <Link to="/post" data-testid="post-listing-link">
