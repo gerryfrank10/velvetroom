@@ -67,14 +67,23 @@ const PostListing = () => {
         const formData = new FormData();
         formData.append('file', file);
         const response = await axios.post(`${API}/upload`, formData);
-        return response.data.url;
+        return response.data;
       });
 
-      const urls = await Promise.all(uploadPromises);
-      setImages([...images, ...urls]);
-      toast.success('Images uploaded!');
+      const results = await Promise.all(uploadPromises);
+      
+      // Separate images and videos
+      results.forEach(result => {
+        if (result.type === 'video') {
+          setVideos(prev => [...prev, result.url]);
+        } else {
+          setImages(prev => [...prev, result.url]);
+        }
+      });
+      
+      toast.success('Files uploaded with watermark!');
     } catch (error) {
-      toast.error('Failed to upload images');
+      toast.error('Failed to upload files');
     } finally {
       setUploadingImage(false);
     }
@@ -82,6 +91,10 @@ const PostListing = () => {
 
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
+  };
+
+  const removeVideo = (index) => {
+    setVideos(videos.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
