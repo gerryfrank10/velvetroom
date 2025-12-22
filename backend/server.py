@@ -298,6 +298,7 @@ async def create_listing(
     phone: Optional[str] = Form(None),
     email: Optional[str] = Form(None),
     images: List[str] = Form([]),
+    videos: List[str] = Form([]),
     current_user: dict = Depends(get_current_user)
 ):
     listing = Listing(
@@ -309,6 +310,7 @@ async def create_listing(
         phone=phone,
         email=email,
         images=images if images else [],
+        videos=videos if videos else [],
         user_id=current_user["id"],
         user_name=current_user["name"]
     )
