@@ -6,6 +6,10 @@ import json
 from datetime import datetime
 import uuid
 import os
+import urllib3
+
+# Disable SSL warnings for testing
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class VelvetRoomAPITester:
     def __init__(self, base_url="https://encounter-hub-2.preview.emergentagent.com/api"):
