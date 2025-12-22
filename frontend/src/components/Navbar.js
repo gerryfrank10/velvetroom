@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Heart, User, Menu, X, LogOut, LayoutDashboard, MessageCircle, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
+import LanguageSelector from './LanguageSelector';
 import { Button } from './ui/button';
 
 const Navbar = () => {
