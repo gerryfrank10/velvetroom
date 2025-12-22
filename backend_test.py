@@ -171,7 +171,14 @@ class VelvetRoomAPITester:
                 self.log_test("Create Listing", True)
                 return True
         
-        self.log_test("Create Listing", False, f"Status: {response.status_code if response else 'No response'}")
+        error_msg = f"Status: {response.status_code if response else 'No response'}"
+        if response and response.status_code != 200:
+            try:
+                error_detail = response.json()
+                error_msg += f", Detail: {error_detail}"
+            except:
+                error_msg += f", Text: {response.text}"
+        self.log_test("Create Listing", False, error_msg)
         return False
 
     def test_get_listings(self):
