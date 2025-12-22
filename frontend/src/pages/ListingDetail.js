@@ -109,13 +109,21 @@ const ListingDetail = () => {
             {/* Left: Images */}
             <div className="lg:col-span-2">
               <div className="glass rounded-2xl overflow-hidden" data-testid="listing-images">
-                {/* Main Image */}
+                {/* Main Media */}
                 <div className="relative h-[500px] overflow-hidden">
-                  <img
-                    src={images[selectedImage]}
-                    alt={listing.title}
-                    className="w-full h-full object-cover blur-reveal"
-                  />
+                  {allMedia[selectedImage] && allMedia[selectedImage].includes('.mp4') || allMedia[selectedImage]?.includes('.mov') || allMedia[selectedImage]?.includes('.webm') || allMedia[selectedImage]?.includes('.avi') ? (
+                    <video
+                      src={allMedia[selectedImage]}
+                      className="w-full h-full object-cover"
+                      controls
+                    />
+                  ) : (
+                    <img
+                      src={allMedia[selectedImage] || images[0]}
+                      alt={listing.title}
+                      className="w-full h-full object-cover blur-reveal"
+                    />
+                  )}
                   {listing.featured && (
                     <div className="absolute top-4 right-4 bg-amber-500 text-black px-4 py-2 rounded-full text-sm font-bold flex items-center space-x-2 badge-verified">
                       <Sparkles className="w-4 h-4" />
@@ -125,18 +133,21 @@ const ListingDetail = () => {
                 </div>
 
                 {/* Thumbnail Gallery */}
-                {images.length > 1 && (
+                {allMedia.length > 1 && (
                   <div className="p-4 flex space-x-2 overflow-x-auto">
-                    {images.map((img, idx) => (
+                    {allMedia.map((media, idx) => (
                       <button
                         key={idx}
                         onClick={() => setSelectedImage(idx)}
                         className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                           selectedImage === idx ? 'border-fuchsia-500' : 'border-white/10'
                         }`}
-                        data-testid={`thumbnail-${idx}`}
-                      >
-                        <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                        data-testid={`thumbnail-${idx}`}>
+                        {media.includes('.mp4') || media.includes('.mov') || media.includes('.webm') || media.includes('.avi') ? (
+                          <video src={media} className="w-full h-full object-cover" />
+                        ) : (
+                          <img src={media} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                        )}
                       </button>
                     ))}
                   </div>
