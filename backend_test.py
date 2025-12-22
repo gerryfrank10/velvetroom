@@ -240,7 +240,8 @@ class VelvetRoomAPITester:
             return False
         
         # Use form data as expected by the API
-        response = self.make_request('POST', 'favorites', {"listing_id": self.test_listing_id})
+        favorite_data = {"listing_id": self.test_listing_id}
+        response = self.make_request('POST', 'favorites', data=favorite_data)
         if response and response.status_code == 200:
             self.log_test("Add Favorite", True)
             return True
