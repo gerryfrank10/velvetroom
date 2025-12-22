@@ -100,8 +100,8 @@ const PostListing = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (images.length === 0) {
-      toast.error('Please upload at least one image');
+    if (images.length === 0 && videos.length === 0) {
+      toast.error('Please upload at least one image or video');
       return;
     }
 
@@ -114,6 +114,9 @@ const PostListing = () => {
       });
       images.forEach((img) => {
         submitData.append('images', img);
+      });
+      videos.forEach((vid) => {
+        submitData.append('videos', vid);
       });
 
       const response = await axios.post(`${API}/listings`, submitData);
