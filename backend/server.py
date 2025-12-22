@@ -89,6 +89,7 @@ class Listing(BaseModel):
     phone: Optional[str] = None
     email: Optional[str] = None
     images: List[str] = []
+    videos: List[str] = []
     user_id: str
     user_name: str
     featured: bool = False
