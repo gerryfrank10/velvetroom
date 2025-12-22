@@ -32,6 +32,7 @@ const PostListing = () => {
     email: ''
   });
   const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
 
   if (!user) {
     return (
