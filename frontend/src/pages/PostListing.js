@@ -250,32 +250,63 @@ const PostListing = () => {
               </div>
             </div>
 
-            {/* Image Upload */}
+            {/* Image & Video Upload */}
             <div>
-              <Label className="text-gray-300 mb-3 block">Images</Label>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                {images.map((img, idx) => (
-                  <div key={idx} className="relative group" data-testid={`image-preview-${idx}`}>
-                    <img src={img} alt={`Upload ${idx + 1}`} className="w-full h-32 object-cover rounded-lg" />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(idx)}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                      data-testid={`remove-image-${idx}`}
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
+              <Label className="text-gray-300 mb-3 block">Images & Videos (Automatic watermark will be added)</Label>
+              
+              {/* Images */}
+              {images.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-400 mb-2">Images ({images.length})</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {images.map((img, idx) => (
+                      <div key={idx} className="relative group" data-testid={`image-preview-${idx}`}>
+                        <img src={img} alt={`Upload ${idx + 1}`} className="w-full h-32 object-cover rounded-lg" />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(idx)}
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          data-testid={`remove-image-${idx}`}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+              )}
 
-                {/* Upload Button */}
+              {/* Videos */}
+              {videos.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-400 mb-2">Videos ({videos.length})</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {videos.map((vid, idx) => (
+                      <div key={idx} className="relative group" data-testid={`video-preview-${idx}`}>
+                        <video src={vid} className="w-full h-48 object-cover rounded-lg" controls />
+                        <button
+                          type="button"
+                          onClick={() => removeVideo(idx)}
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          data-testid={`remove-video-${idx}`}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Upload Button */}
+              <div className="grid grid-cols-2 gap-4">
                 <label
                   className="h-32 border-2 border-dashed border-white/20 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-fuchsia-500/50 transition-colors"
-                  data-testid="upload-image-label"
+                  data-testid="upload-media-label"
                 >
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/*,video/*"
                     multiple
                     onChange={handleImageUpload}
                     className="hidden"
@@ -286,7 +317,8 @@ const PostListing = () => {
                   ) : (
                     <>
                       <Plus className="w-8 h-8 text-gray-400 mb-2" />
-                      <span className="text-xs text-gray-400">Add Image</span>
+                      <span className="text-xs text-gray-400">Add Media</span>
+                      <span className="text-xs text-gray-500 mt-1">(Images & Videos)</span>
                     </>
                   )}
                 </label>
