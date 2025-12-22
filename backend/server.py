@@ -194,10 +194,80 @@ async def get_me(current_user: dict = Depends(get_current_user)):
 
 # ============ FILE UPLOAD ============
 
+def add_watermark_to_image(image_path: Path) -> Path:
+    """Add watermark to image"""
+    try:
+        img = Image.open(image_path)
+        width, height = img.size
+        
+        # Create watermark
+        draw = ImageDraw.Draw(img)
+        watermark_text = "VelvetRoom.com"
+        
+        # Calculate position (bottom right)
+        font_size = int(min(width, height) * 0.05)
+        try:
+            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", font_size)
+        except:
+            font = ImageFont.load_default()
+        
+        # Get text bounding box
+        bbox = draw.textbbox((0, 0), watermark_text, font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+        
+        # Position at bottom right with padding
+        x = width - text_width - 20
+        y = height - text_height - 20
+        
+        # Draw semi-transparent background
+        padding = 10
+        draw.rectangle(
+            [x - padding, y - padding, x + text_width + padding, y + text_height + padding],
+            fill=(0, 0, 0, 180)
+        )
+        
+        # Draw text
+        draw.text((x, y), watermark_text, fill=(217, 70, 239, 255), font=font)
+        
+        # Save
+        img.save(image_path)
+        return image_path
+    except Exception as e:
+        logger.error(f"Failed to add watermark to image: {e}")
+        return image_path
+
+def add_watermark_to_video(video_path: Path) -> Path:
+    """Add watermark to video using ffmpeg"""
+    try:
+        output_path = video_path.parent / f"watermarked_{video_path.name}"
+        
+        # Use ffmpeg to add text watermark
+        watermark_text = "VelvetRoom.com"
+        
+        cmd = [
+            'ffmpeg', '-i', str(video_path),
+            '-vf', f"drawtext=text='{watermark_text}':x=w-tw-20:y=h-th-20:fontsize=24:fontcolor=white@0.8:box=1:boxcolor=black@0.5:boxborderw=5",
+            '-codec:a', 'copy',
+            '-y',
+            str(output_path)
+        ]
+        
+        subprocess.run(cmd, check=True, capture_output=True)
+        
+        # Replace original with watermarked
+        video_path.unlink()
+        output_path.rename(video_path)
+        
+        return video_path
+    except Exception as e:
+        logger.error(f"Failed to add watermark to video: {e}")
+        return video_path
+
 @api_router.post("/upload")
 async def upload_file(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
     # Generate unique filename
-    file_ext = Path(file.filename).suffix
+    file_ext = Path(file.filename).suffix.lower()
     filename = f"{uuid.uuid4()}{file_ext}"
     file_path = UPLOADS_DIR / filename
     
@@ -205,9 +275,15 @@ async def upload_file(file: UploadFile = File(...), current_user: dict = Depends
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
+    # Add watermark based on file type
+    if file_ext in ['.jpg', '.jpeg', '.png', '.webp']:
+        add_watermark_to_image(file_path)
+    elif file_ext in ['.mp4', '.mov', '.avi', '.webm']:
+        add_watermark_to_video(file_path)
+    
     # Return URL
     backend_url = os.environ.get('BACKEND_URL', 'http://localhost:8001')
-    return {"url": f"{backend_url}/uploads/{filename}"}
+    return {"url": f"{backend_url}/uploads/{filename}", "type": "video" if file_ext in ['.mp4', '.mov', '.avi', '.webm'] else "image"}
 
 # ============ LISTING ROUTES ============
 
