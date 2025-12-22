@@ -53,8 +53,8 @@ class VelvetRoomAPITester:
             if method == 'GET':
                 response = requests.get(url, headers=default_headers, verify=False, timeout=30)
             elif method == 'POST':
-                if files or data:
-                    # For form data, don't use json parameter
+                if files or (data and endpoint.startswith('listings')):
+                    # For form data (listings), don't use json parameter
                     print(f"Sending form data: {data}")
                     response = requests.post(url, data=data, files=files, headers=default_headers, verify=False, timeout=30)
                 else:
