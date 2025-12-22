@@ -88,6 +88,8 @@ const ListingDetail = () => {
   if (!listing) return null;
 
   const images = listing.images.length > 0 ? listing.images : ['https://images.unsplash.com/photo-1759771716328-db403c219f56?crop=entropy&cs=srgb&fm=jpg&q=85'];
+  const videos = listing.videos || [];
+  const allMedia = [...images, ...videos];
 
   return (
     <>
