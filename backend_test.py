@@ -131,15 +131,16 @@ class VelvetRoomAPITester:
         listing_data = {
             "title": "Test Listing",
             "description": "This is a test listing for automated testing",
-            "price": 150.0,
+            "price": "150.0",
             "location": "Test City, TS",
             "category": "Escorts",
             "phone": "+1234567890",
             "email": "test@example.com",
-            "images": ["https://images.unsplash.com/photo-1759771716328-db403c219f56?crop=entropy&cs=srgb&fm=jpg&q=85"]
+            "images": "https://images.unsplash.com/photo-1759771716328-db403c219f56?crop=entropy&cs=srgb&fm=jpg&q=85"
         }
         
-        response = self.make_request('POST', 'listings', listing_data)
+        # Use form data instead of JSON
+        response = self.make_request('POST', 'listings', data=listing_data, files=None)
         if response and response.status_code == 200:
             data = response.json()
             if 'id' in data and data['status'] == 'pending':
