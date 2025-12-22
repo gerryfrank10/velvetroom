@@ -101,7 +101,14 @@ class VelvetRoomAPITester:
                 self.log_test("User Registration", True)
                 return True
         
-        self.log_test("User Registration", False, f"Status: {response.status_code if response else 'No response'}")
+        error_msg = f"Status: {response.status_code if response else 'No response'}"
+        if response and response.status_code != 200:
+            try:
+                error_detail = response.json()
+                error_msg += f", Detail: {error_detail}"
+            except:
+                error_msg += f", Text: {response.text}"
+        self.log_test("User Registration", False, error_msg)
         return False
 
     def test_admin_login(self):
@@ -120,7 +127,14 @@ class VelvetRoomAPITester:
                 self.log_test("Admin Login", True)
                 return True
         
-        self.log_test("Admin Login", False, f"Status: {response.status_code if response else 'No response'}")
+        error_msg = f"Status: {response.status_code if response else 'No response'}"
+        if response and response.status_code != 200:
+            try:
+                error_detail = response.json()
+                error_msg += f", Detail: {error_detail}"
+            except:
+                error_msg += f", Text: {response.text}"
+        self.log_test("Admin Login", False, error_msg)
         return False
 
     def test_get_current_user(self):
