@@ -1,0 +1,171 @@
+{
+  "design_system": {
+    "identity": {
+      "name": "VelvetRoom",
+      "archetype": "Jewel & Luxury",
+      "vibe": "Exclusive, Private, High-End Nightlife",
+      "emotional_tone": "Desire, Mystery, Trust, Sophistication"
+    },
+    "typography": {
+      "headings": {
+        "font_family": "Playfair Display, serif",
+        "weights": ["400", "700"],
+        "usage": "All section titles, hero text, and major calls to action. Use italic variants for emphasis.",
+        "letter_spacing": "tracking-tight"
+      },
+      "body": {
+        "font_family": "Manrope, sans-serif",
+        "weights": ["300", "400", "500", "600"],
+        "usage": "UI elements, descriptions, form inputs, metadata.",
+        "letter_spacing": "tracking-normal"
+      },
+      "mono": {
+        "font_family": "JetBrains Mono, monospace",
+        "usage": "IDs, timestamps, technical metadata."
+      }
+    },
+    "colors": {
+      "palette": {
+        "background": {
+          "default": "#050505",
+          "paper": "#0A0A0A",
+          "subtle": "#121212"
+        },
+        "primary": {
+          "main": "#D946EF",
+          "hover": "#C026D3",
+          "foreground": "#FFFFFF"
+        },
+        "secondary": {
+          "main": "#8B5CF6",
+          "hover": "#7C3AED",
+          "foreground": "#FFFFFF"
+        },
+        "accent": {
+          "main": "#F59E0B",
+          "glow": "rgba(245, 158, 11, 0.5)"
+        },
+        "text": {
+          "primary": "#F8FAFC",
+          "secondary": "#94A3B8",
+          "muted": "#475569"
+        },
+        "status": {
+          "success": "#10B981",
+          "error": "#EF4444",
+          "warning": "#F59E0B"
+        }
+      },
+      "gradients": {
+        "brand": "linear-gradient(135deg, #D946EF 0%, #8B5CF6 100%)",
+        "dark_overlay": "linear-gradient(to bottom, rgba(5,5,5,0) 0%, rgba(5,5,5,0.9) 100%)",
+        "glow_border": "linear-gradient(90deg, transparent, #D946EF, transparent)"
+      }
+    },
+    "spacing": {
+      "scale": "Tailwind default but doubled for luxury feel (p-8, p-12, p-16)",
+      "container_padding": "px-6 md:px-12 lg:px-24",
+      "section_gap": "gap-24"
+    },
+    "visual_enhancers": {
+      "glassmorphism": {
+        "default": "bg-black/40 backdrop-blur-xl border border-white/10",
+        "heavy": "bg-black/80 backdrop-blur-2xl border-b border-white/5"
+      },
+      "borders": {
+        "subtle": "border border-white/5",
+        "active": "border border-fuchsia-500/50 shadow-[0_0_15px_rgba(217,70,239,0.3)]"
+      },
+      "shadows": {
+        "neon": "0 0 20px rgba(217, 70, 239, 0.15)",
+        "card": "0 10px 30px -10px rgba(0,0,0,0.5)"
+      }
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-gradient-to-r from-fuchsia-500 to-violet-600 text-white font-medium px-8 py-3 rounded-full hover:shadow-[0_0_20px_rgba(217,70,239,0.4)] transition-all duration-300 transform hover:-translate-y-0.5",
+      "secondary": "bg-white/5 border border-white/10 text-white px-6 py-3 rounded-full hover:bg-white/10 transition-all",
+      "ghost": "text-gray-400 hover:text-white transition-colors"
+    },
+    "cards": {
+      "listing": "group relative overflow-hidden rounded-xl bg-[#0A0A0A] border border-white/5 hover:border-fuchsia-500/30 transition-all duration-500",
+      "feature": "p-8 rounded-2xl bg-gradient-to-br from-white/5 to-transparent border border-white/5 hover:bg-white/10 transition-all"
+    },
+    "inputs": {
+      "default": "bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-gray-600 focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 transition-all outline-none"
+    }
+  },
+  "layout_strategies": {
+    "home_page": {
+      "type": "Bento Grid",
+      "structure": "Asymmetrical grid showcasing top profiles, categories, and featured events. Mix of tall (portrait) and wide (landscape) blocks.",
+      "hero": "Full-screen immersive video/image background with 'Midnight Velvet' gradient overlay. Centered, elegant typography."
+    },
+    "listing_page": {
+      "type": "Masonry / Strict Grid",
+      "structure": "Responsive grid (1 col mobile, 2 col tablet, 3-4 col desktop). Each card focuses on the image with minimal text overlay.",
+      "filters": "Sidebar on desktop, Bottom Sheet on mobile. Glassmorphism style."
+    },
+    "profile_page": {
+      "type": "Editorial Layout",
+      "structure": "Large hero image, sticky booking/contact card on right (desktop). Content flows centrally with rich typography."
+    }
+  },
+  "image_assets": {
+    "hero_backgrounds": [
+      {
+        "url": "https://images.unsplash.com/photo-1760999850496-1c6bd237dd25?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Neon Nightlife Atmosphere",
+        "category": "hero"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1627583788341-d89663c14092?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Luxury Club Silhouette",
+        "category": "hero"
+      }
+    ],
+    "placeholders": {
+      "profiles": [
+        {
+          "url": "https://images.unsplash.com/photo-1759771716328-db403c219f56?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "alt": "Edgy Fashion Portrait"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1761001313134-a2b63f00d4bf?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "alt": "Dramatic Lighting Portrait"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1764166904887-c3a6683c350c?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "alt": "Elegant Portrait"
+        }
+      ],
+      "locations": [
+        {
+          "url": "https://images.unsplash.com/photo-1750763533241-7c2beccb9eab?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "alt": "Red Room Interior"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1718981464703-c167144381eb?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "alt": "Neon Hallway"
+        }
+      ]
+    }
+  },
+  "instructions_to_main_agent": [
+    "1. THEME ENFORCEMENT: The app must be DARK MODE ONLY. Do not implement a light mode toggle. The vibe is 'Nightlife'.",
+    "2. FONT INSTALLATION: You must import 'Playfair Display' and 'Manrope' from Google Fonts in index.css.",
+    "3. SHADCN CUSTOMIZATION: When using Shadcn components (Dialog, Dropdown, etc.), override the default white backgrounds with 'bg-zinc-950' or 'bg-black' and add 'border-white/10'.",
+    "4. IMAGERY: Use the provided Unsplash URLs for the initial populate. Do not leave empty gray boxes.",
+    "5. PRIVACY UI: Implement 'Blur Reveal' effects for sensitive content (images start blurred, unblur on hover/click).",
+    "6. GOLD ACCENTS: Use the Amber-500 color sparingly for 'Verified' badges and 'Premium' features to create value.",
+    "7. MOBILE FIRST: Ensure the bottom navigation bar is glassmorphic and floats above the content on mobile.",
+    "8. NO GENERIC ICONS: Use Lucide-React icons with thin strokes (stroke-width={1.5}) to match the elegant typography."
+  ],
+  "universal_guidelines": [
+    "Avoid 'AI Slop': No generic centered layouts. Use asymmetry.",
+    "Micro-interactions: Buttons should scale down slightly on click. Links should have underline animations.",
+    "Spacing: Use p-8 where you would normally use p-4.",
+    "Data-Test-IDs: Every interactive element must have a data-testid attribute."
+  ]
+}
