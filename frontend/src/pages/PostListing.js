@@ -15,6 +15,18 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const CATEGORIES = ['Escorts', 'Massage', 'Adult Dating', 'Virtual', 'Other'];
 
+const AVAILABLE_SERVICES = [
+  'Companionship',
+  'Massage Therapy',
+  'Travel Companion',
+  'Dinner Dates',
+  'Events & Parties',
+  'Virtual Sessions',
+  'Photography',
+  'Dance',
+  'Other Services'
+];
+
 const PostListing = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
