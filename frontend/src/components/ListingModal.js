@@ -13,6 +13,7 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const ListingModal = ({ listing, isOpen, onClose }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [message, setMessage] = useState('');
   const [selectedMedia, setSelectedMedia] = useState(0);
