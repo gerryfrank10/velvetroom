@@ -37,6 +37,14 @@ const Navbar = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
               <LanguageSelector />
+              <button
+                onClick={toggleTheme}
+                className="text-gray-400 hover:text-white transition-colors"
+                data-testid="theme-toggle"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {theme === 'dark' ? <Sun className="w-5 h-5" strokeWidth={1.5} /> : <Moon className="w-5 h-5" strokeWidth={1.5} />}
+              </button>
               {user ? (
                 <>
                   <Link to="/post" data-testid="post-listing-link">
