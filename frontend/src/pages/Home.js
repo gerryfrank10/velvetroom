@@ -181,10 +181,10 @@ const Home = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" data-testid="listings-grid">
             {listings.map((listing) => (
-              <Link
+              <div
                 key={listing.id}
-                to={`/listing/${listing.id}`}
-                className="listing-card group relative overflow-hidden rounded-xl bg-[#0A0A0A] border border-white/5 hover:border-fuchsia-500/30 transition-all duration-500"
+                onClick={() => handleListingClick(listing)}
+                className="listing-card group relative overflow-hidden rounded-xl bg-[#0A0A0A] border border-white/5 hover:border-fuchsia-500/30 transition-all duration-500 cursor-pointer"
                 data-testid={`listing-card-${listing.id}`}
               >
                 {/* Image */}
