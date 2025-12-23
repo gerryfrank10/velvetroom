@@ -132,7 +132,13 @@ const ListingModal = ({ listing, isOpen, onClose }) => {
                 </h2>
                 <div className="flex items-center space-x-3 text-gray-300 mb-2">
                   <MapPin className="w-4 h-4 text-fuchsia-500" strokeWidth={1.5} />
-                  <span>{listing.location}</span>
+                  <span>
+                    {typeof listing.location === 'object'
+                      ? [listing.location.district, listing.location.city, listing.location.region, listing.location.country]
+                          .filter(Boolean)
+                          .join(', ')
+                      : listing.location}
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2 text-gray-400 text-sm">
                   <Eye className="w-4 h-4" strokeWidth={1.5} />
