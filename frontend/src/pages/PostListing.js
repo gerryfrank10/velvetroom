@@ -136,7 +136,11 @@ const PostListing = () => {
     try {
       const submitData = new FormData();
       Object.keys(formData).forEach((key) => {
-        submitData.append(key, formData[key]);
+        if (key === 'location') {
+          submitData.append(key, JSON.stringify(formData[key]));
+        } else {
+          submitData.append(key, formData[key]);
+        }
       });
       images.forEach((img) => {
         submitData.append('images', img);
