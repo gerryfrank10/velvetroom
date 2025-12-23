@@ -197,7 +197,20 @@ const ListingModal = ({ listing, isOpen, onClose }) => {
 
               {/* Contact */}
               <div className="border-t border-white/10 pt-4">
-                <p className="text-sm text-gray-400 mb-3">Posted by: {listing.user_name}</p>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm text-gray-400">Posted by: {listing.user_name}</p>
+                  <Button
+                    onClick={() => {
+                      navigate(`/profile/${listing.user_id}`);
+                      onClose();
+                    }}
+                    className="bg-white/5 border border-white/10 text-white hover:bg-white/10 text-sm px-4 py-2"
+                    data-testid="view-profile-button"
+                  >
+                    <UserIcon className="w-4 h-4 mr-2" strokeWidth={1.5} />
+                    View Full Profile
+                  </Button>
+                </div>
                 
                 {listing.phone && (
                   <a 
