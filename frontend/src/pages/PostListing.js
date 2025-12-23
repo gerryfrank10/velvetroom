@@ -39,7 +39,7 @@ const PostListing = () => {
     title: '',
     description: '',
     price: '',
-    location: '',
+    location: {},
     category: '',
     phone: '',
     email: ''
