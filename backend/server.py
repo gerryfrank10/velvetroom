@@ -633,6 +633,14 @@ async def update_listing_status(
 
 # ============ STATS ============
 
+@api_router.get("/locations")
+async def get_locations():
+    """Get hierarchical location data"""
+    import json
+    locations_file = ROOT_DIR / "locations.json"
+    with open(locations_file, 'r') as f:
+        return json.load(f)
+
 @api_router.get("/stats")
 async def get_stats():
     total_listings = await db.listings.count_documents({"status": "approved"})
