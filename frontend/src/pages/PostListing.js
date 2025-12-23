@@ -270,6 +270,81 @@ const PostListing = () => {
               />
             </div>
 
+            {/* Services */}
+            <div>
+              <Label className="text-gray-300 mb-3 block">Services Offered (Select all that apply)</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {AVAILABLE_SERVICES.map((service) => (
+                  <button
+                    key={service}
+                    type="button"
+                    onClick={() => toggleService(service)}
+                    className={`p-3 rounded-lg border-2 transition-all text-sm ${
+                      services.includes(service)
+                        ? 'border-fuchsia-500 bg-fuchsia-500/20 text-white'
+                        : 'border-white/10 bg-white/5 text-gray-400 hover:border-white/20'
+                    }`}
+                    data-testid={`service-${service.replace(/\s+/g, '-').toLowerCase()}`}
+                  >
+                    {service}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Pricing Tiers */}
+            <div>
+              <Label className="text-gray-300 mb-3 block">Pricing Tiers</Label>
+              <div className="space-y-3">
+                {pricingTiers.map((tier, idx) => (
+                  <div key={idx} className="grid grid-cols-12 gap-3" data-testid={`pricing-tier-${idx}`}>
+                    <div className="col-span-5">
+                      <Input
+                        type="number"
+                        step="0.5"
+                        placeholder="Hours"
+                        value={tier.hours}
+                        onChange={(e) => updatePricingTier(idx, 'hours', parseFloat(e.target.value))}
+                        className="bg-black/20 border-white/10 text-white"
+                        data-testid={`hours-${idx}`}
+                      />
+                    </div>
+                    <div className="col-span-5">
+                      <Input
+                        type="number"
+                        placeholder="Price"
+                        value={tier.price}
+                        onChange={(e) => updatePricingTier(idx, 'price', parseFloat(e.target.value))}
+                        className="bg-black/20 border-white/10 text-white"
+                        data-testid={`price-${idx}`}
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      {pricingTiers.length > 1 && (
+                        <Button
+                          type="button"
+                          onClick={() => removePricingTier(idx)}
+                          className="w-full bg-red-500/20 border border-red-500/30 text-red-500 hover:bg-red-500/30"
+                          data-testid={`remove-tier-${idx}`}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  onClick={addPricingTier}
+                  className="w-full bg-white/5 border border-white/10 text-white hover:bg-white/10"
+                  data-testid="add-pricing-tier"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Pricing Tier
+                </Button>
+              </div>
+            </div>
+
             {/* Contact Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
