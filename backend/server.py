@@ -95,7 +95,7 @@ class Listing(BaseModel):
     price: float
     pricing_tiers: List[dict] = []  # [{"hours": 1, "price": 100}, {"hours": 2, "price": 180}]
     services: List[str] = []  # ["Massage", "Companionship", "Travel"]
-    location: str
+    location: dict = {}  # {"country": "UK", "region": "Dorset", "city": "Bournemouth", "district": "Winton"}
     category: str
     phone: Optional[str] = None
     email: Optional[str] = None
