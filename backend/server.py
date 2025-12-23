@@ -545,6 +545,61 @@ async def get_conversation(listing_id: str, current_user: dict = Depends(get_cur
 
 # ============ ADMIN ROUTES ============
 
+@api_router.get("/admin/users", response_model=List[User])
+async def get_all_users(current_user: dict = Depends(get_current_user)):
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    users = await db.users.find({}, {"_id": 0, "password": 0}).sort("created_at", -1).to_list(1000)
+    
+    for user in users:
+        if isinstance(user.get("created_at"), str):
+            user["created_at"] = datetime.fromisoformat(user["created_at"])
+        if isinstance(user.get("last_active"), str):
+            user["last_active"] = datetime.fromisoformat(user["last_active"])
+        if user.get("vip_expiry") and isinstance(user["vip_expiry"], str):
+            user["vip_expiry"] = datetime.fromisoformat(user["vip_expiry"])
+    
+    return users
+
+@api_router.delete("/admin/users/{user_id}")
+async def delete_user(user_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Delete user's listings
+    await db.listings.delete_many({"user_id": user_id})
+    # Delete user's messages
+    await db.messages.delete_many({"$or": [{"from_user_id": user_id}, {"to_user_id": user_id}]})
+    # Delete user's favorites
+    await db.favorites.delete_many({"user_id": user_id})
+    # Delete user
+    await db.users.delete_one({"id": user_id})
+    
+    return {"message": "User and all associated data deleted"}
+
+@api_router.post("/admin/users/{user_id}/vip")
+async def toggle_vip_status(
+    user_id: str,
+    days: int = 30,
+    current_user: dict = Depends(get_current_user)
+):
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    vip_expiry = datetime.now(timezone.utc) + timedelta(days=days)
+    
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"vip_status": True, "vip_expiry": vip_expiry.isoformat()}}
+    )
+    
+    return {"message": f"VIP status granted for {days} days"}
+
 @api_router.get("/admin/listings", response_model=List[Listing])
 async def get_admin_listings(
     status: str = "pending",
