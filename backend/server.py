@@ -78,12 +78,18 @@ class ListingCreate(BaseModel):
     phone: Optional[str] = None
     email: Optional[str] = None
 
+class PricingTier(BaseModel):
+    hours: float
+    price: float
+
 class Listing(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
     description: str
     price: float
+    pricing_tiers: List[dict] = []  # [{"hours": 1, "price": 100}, {"hours": 2, "price": 180}]
+    services: List[str] = []  # ["Massage", "Companionship", "Travel"]
     location: str
     category: str
     phone: Optional[str] = None
