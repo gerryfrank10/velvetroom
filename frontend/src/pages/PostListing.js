@@ -119,6 +119,17 @@ const PostListing = () => {
       return;
     }
 
+    if (services.length === 0) {
+      toast.error('Please select at least one service');
+      return;
+    }
+
+    const validTiers = pricingTiers.filter(t => t.hours && t.price);
+    if (validTiers.length === 0) {
+      toast.error('Please add at least one pricing tier');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -132,6 +143,8 @@ const PostListing = () => {
       videos.forEach((vid) => {
         submitData.append('videos', vid);
       });
+      submitData.append('services', JSON.stringify(services));
+      submitData.append('pricing_tiers', JSON.stringify(validTiers));
 
       const response = await axios.post(`${API}/listings`, submitData);
       toast.success('Listing submitted for review!');
@@ -141,6 +154,28 @@ const PostListing = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleService = (service) => {
+    if (services.includes(service)) {
+      setServices(services.filter(s => s !== service));
+    } else {
+      setServices([...services, service]);
+    }
+  };
+
+  const addPricingTier = () => {
+    setPricingTiers([...pricingTiers, { hours: '', price: '' }]);
+  };
+
+  const removePricingTier = (index) => {
+    setPricingTiers(pricingTiers.filter((_, i) => i !== index));
+  };
+
+  const updatePricingTier = (index, field, value) => {
+    const updated = [...pricingTiers];
+    updated[index][field] = value;
+    setPricingTiers(updated);
   };
 
   return (
