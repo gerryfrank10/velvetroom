@@ -305,8 +305,11 @@ async def create_listing(
     email: Optional[str] = Form(None),
     images: List[str] = Form([]),
     videos: List[str] = Form([]),
+    pricing_tiers: str = Form("[]"),
+    services: str = Form("[]"),
     current_user: dict = Depends(get_current_user)
 ):
+    import json
     listing = Listing(
         title=title,
         description=description,
@@ -317,6 +320,8 @@ async def create_listing(
         email=email,
         images=images if images else [],
         videos=videos if videos else [],
+        pricing_tiers=json.loads(pricing_tiers) if pricing_tiers else [],
+        services=json.loads(services) if services else [],
         user_id=current_user["id"],
         user_name=current_user["name"]
     )
