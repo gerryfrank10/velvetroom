@@ -220,7 +220,7 @@ const Home = () => {
                     <span className="text-xs text-gray-500">{listing.views} views</span>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}
