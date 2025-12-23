@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, MapPin, DollarSign, Eye, Heart, Mail, Phone, Sparkles, Clock } from 'lucide-react';
+import { X, MapPin, DollarSign, Eye, Heart, Mail, Phone, Sparkles, Clock, User as UserIcon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { Button } from './ui/button';
