@@ -62,6 +62,11 @@ const Home = () => {
     fetchListings();
   };
 
+  const handleListingClick = (listing) => {
+    setSelectedListing(listing);
+    setShowModal(true);
+  };
+
   return (
     <div className="min-h-screen pt-20">
       {/* Hero Section */}
