@@ -7,8 +7,13 @@ import PostListing from './pages/PostListing';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Messages from './pages/Messages';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Support from './pages/Support';
+import UserProfile from './pages/UserProfile';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 function App() {
   return (
