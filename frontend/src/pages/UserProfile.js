@@ -89,7 +89,7 @@ const UserProfile = () => {
                   </div>
                   <div className=\"flex items-center space-x-4 text-gray-400\">
                     <span>{listings.length} Active Listings</span>
-                    <span>\u2022</span>
+                    <span>•</span>
                     <span>Member since 2024</span>
                   </div>
                 </div>
