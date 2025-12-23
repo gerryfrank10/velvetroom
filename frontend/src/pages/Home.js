@@ -24,6 +24,8 @@ const Home = () => {
   const [location, setLocation] = useState('');
   const [stats, setStats] = useState({ total_listings: 0, total_users: 0 });
   const [loading, setLoading] = useState(true);
+  const [selectedListing, setSelectedListing] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchListings();
