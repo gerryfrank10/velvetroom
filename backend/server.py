@@ -654,6 +654,81 @@ async def update_listing_status(
     )
     return {"message": f"Listing {action.status}"}
 
+# ============ VIDEO MARKETPLACE ============
+
+@api_router.post("/videos/sale", response_model=VideoForSale)
+async def create_video_for_sale(
+    title: str = Form(...),
+    description: str = Form(...),
+    video_url: str = Form(...),
+    price: float = Form(...),
+    thumbnail_url: Optional[str] = Form(None),
+    duration_seconds: Optional[int] = Form(None),
+    current_user: dict = Depends(get_current_user)
+):
+    video = VideoForSale(
+        user_id=current_user["id"],
+        title=title,
+        description=description,
+        video_url=video_url,
+        thumbnail_url=thumbnail_url,
+        price=price,
+        duration_seconds=duration_seconds
+    )
+    
+    video_dict = video.model_dump()
+    video_dict["created_at"] = video_dict["created_at"].isoformat()
+    
+    await db.videos_for_sale.insert_one(video_dict)
+    return video
+
+@api_router.get("/videos/sale/user/{user_id}", response_model=List[VideoForSale])
+async def get_user_videos_for_sale(user_id: str):
+    videos = await db.videos_for_sale.find({"user_id": user_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    
+    for video in videos:
+        if isinstance(video["created_at"], str):
+            video["created_at"] = datetime.fromisoformat(video["created_at"])
+    
+    return videos
+
+@api_router.post("/videos/purchase/{video_id}")
+async def purchase_video(video_id: str, current_user: dict = Depends(get_current_user)):
+    video = await db.videos_for_sale.find_one({"id": video_id}, {"_id": 0})
+    if not video:
+        raise HTTPException(status_code=404, detail="Video not found")
+    
+    # Check if already purchased
+    existing = await db.video_purchases.find_one({"video_id": video_id, "buyer_id": current_user["id"]}, {"_id": 0})
+    if existing:
+        return {"message": "Already purchased", "video_url": video["video_url"]}
+    
+    purchase = VideoPurchase(
+        video_id=video_id,
+        buyer_id=current_user["id"],
+        price=video["price"]
+    )
+    
+    purchase_dict = purchase.model_dump()
+    purchase_dict["purchased_at"] = purchase_dict["purchased_at"].isoformat()
+    
+    await db.video_purchases.insert_one(purchase_dict)
+    
+    return {"message": "Purchase successful", "video_url": video["video_url"]}
+
+@api_router.get("/videos/purchased")
+async def get_purchased_videos(current_user: dict = Depends(get_current_user)):
+    purchases = await db.video_purchases.find({"buyer_id": current_user["id"]}, {"_id": 0}).to_list(1000)
+    video_ids = [p["video_id"] for p in purchases]
+    
+    videos = await db.videos_for_sale.find({"id": {"$in": video_ids}}, {"_id": 0}).to_list(1000)
+    
+    for video in videos:
+        if isinstance(video["created_at"], str):
+            video["created_at"] = datetime.fromisoformat(video["created_at"])
+    
+    return videos
+
 # ============ STATS ============
 
 @api_router.get("/locations")
