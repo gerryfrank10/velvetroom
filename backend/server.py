@@ -67,6 +67,7 @@ class User(BaseModel):
     vip_expiry: Optional[datetime] = None
     bio: Optional[str] = None
     profile_image: Optional[str] = None
+    ethnicity: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     last_active: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
