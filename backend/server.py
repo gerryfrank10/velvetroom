@@ -407,6 +407,53 @@ async def delete_listing(listing_id: str, current_user: dict = Depends(get_curre
     await db.listings.delete_one({"id": listing_id})
     return {"message": "Listing deleted"}
 
+@api_router.put("/listings/{listing_id}", response_model=Listing)
+async def update_listing(
+    listing_id: str,
+    title: str = Form(...),
+    description: str = Form(...),
+    price: float = Form(...),
+    location: str = Form(...),
+    category: str = Form(...),
+    phone: Optional[str] = Form(None),
+    email: Optional[str] = Form(None),
+    images: List[str] = Form([]),
+    videos: List[str] = Form([]),
+    pricing_tiers: str = Form("[]"),
+    services: str = Form("[]"),
+    current_user: dict = Depends(get_current_user)
+):
+    import json
+    
+    listing = await db.listings.find_one({"id": listing_id}, {"_id": 0})
+    if not listing:
+        raise HTTPException(status_code=404, detail="Listing not found")
+    
+    if listing["user_id"] != current_user["id"] and current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    update_data = {
+        "title": title,
+        "description": description,
+        "price": price,
+        "location": location,
+        "category": category,
+        "phone": phone,
+        "email": email,
+        "images": images if images else [],
+        "videos": videos if videos else [],
+        "pricing_tiers": json.loads(pricing_tiers) if pricing_tiers else [],
+        "services": json.loads(services) if services else []
+    }
+    
+    await db.listings.update_one({"id": listing_id}, {"$set": update_data})
+    
+    updated_listing = await db.listings.find_one({"id": listing_id}, {"_id": 0})
+    if isinstance(updated_listing["created_at"], str):
+        updated_listing["created_at"] = datetime.fromisoformat(updated_listing["created_at"])
+    
+    return Listing(**updated_listing)
+
 # ============ FAVORITES ============
 
 @api_router.post("/favorites")
