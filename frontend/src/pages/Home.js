@@ -5,6 +5,7 @@ import { Search, MapPin, DollarSign, Star, Sparkles } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import ListingModal from '../components/ListingModal';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
