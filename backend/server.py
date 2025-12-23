@@ -315,11 +315,13 @@ async def create_listing(
     current_user: dict = Depends(get_current_user)
 ):
     import json
+    location_obj = json.loads(location) if location else {}
+    
     listing = Listing(
         title=title,
         description=description,
         price=price,
-        location=location,
+        location=location_obj,
         category=category,
         phone=phone,
         email=email,
