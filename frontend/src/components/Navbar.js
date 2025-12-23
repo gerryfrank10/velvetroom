@@ -9,6 +9,7 @@ import { Button } from './ui/button';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
