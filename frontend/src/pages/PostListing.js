@@ -45,6 +45,8 @@ const PostListing = () => {
   });
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [services, setServices] = useState([]);
+  const [pricingTiers, setPricingTiers] = useState([{ hours: 1, price: '' }]);
 
   if (!user) {
     return (
