@@ -352,7 +352,8 @@ async def create_listing(
         pricing_tiers=json.loads(pricing_tiers) if pricing_tiers else [],
         services=json.loads(services) if services else [],
         user_id=current_user["id"],
-        user_name=current_user["name"]
+        user_name=current_user["name"],
+        user_ethnicity=current_user.get("ethnicity")
     )
     
     listing_dict = listing.model_dump()
