@@ -19,16 +19,23 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="App min-h-screen bg-[#050505]">
+        <div className="App min-h-screen bg-[#050505] flex flex-col">
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/listing/:id" element={<ListingDetail />} />
-            <Route path="/post" element={<PostListing />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/messages" element={<Messages />} />
-          </Routes>
+          <div className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/listing/:id" element={<ListingDetail />} />
+              <Route path="/post" element={<PostListing />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/profile/:userId" element={<UserProfile />} />
+            </Routes>
+          </div>
+          <Footer />
           <Toaster position="top-right" theme="dark" />
         </div>
       </BrowserRouter>
