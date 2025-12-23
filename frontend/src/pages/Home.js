@@ -210,7 +210,11 @@ const Home = () => {
                   </h3>
                   <div className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                     <MapPin className="w-4 h-4" strokeWidth={1.5} />
-                    <span>{listing.location}</span>
+                    <span>
+                      {typeof listing.location === 'object' 
+                        ? `${listing.location.district || listing.location.city || ''}, ${listing.location.country || ''}`
+                        : listing.location}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1 text-fuchsia-500 font-bold">
