@@ -262,16 +262,10 @@ const PostListing = () => {
 
             {/* Location */}
             <div>
-              <Label htmlFor="location" className="text-gray-300">Location</Label>
-              <Input
-                id="location"
-                type="text"
+              <LocationSelector
                 value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                onChange={(location) => setFormData({ ...formData, location })}
                 required
-                className="bg-black/20 border-white/10 text-white mt-2"
-                placeholder="City, State"
-                data-testid="location-input"
               />
             </div>
 
