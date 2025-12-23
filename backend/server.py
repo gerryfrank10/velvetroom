@@ -104,10 +104,31 @@ class Listing(BaseModel):
     videos: List[str] = []
     user_id: str
     user_name: str
+    user_ethnicity: Optional[str] = None
     featured: bool = False
     status: str = "pending"  # pending, approved, rejected
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     views: int = 0
+
+class VideoForSale(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    title: str
+    description: str
+    video_url: str
+    thumbnail_url: Optional[str] = None
+    price: float
+    duration_seconds: Optional[int] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class VideoPurchase(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    video_id: str
+    buyer_id: str
+    price: float
+    purchased_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class MessageCreate(BaseModel):
     to_user_id: str
