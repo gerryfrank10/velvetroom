@@ -439,11 +439,13 @@ async def update_listing(
     if listing["user_id"] != current_user["id"] and current_user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Not authorized")
     
+    location_obj = json.loads(location) if location else {}
+    
     update_data = {
         "title": title,
         "description": description,
         "price": price,
-        "location": location,
+        "location": location_obj,
         "category": category,
         "phone": phone,
         "email": email,
