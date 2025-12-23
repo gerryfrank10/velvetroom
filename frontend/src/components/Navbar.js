@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, User, Menu, X, LogOut, LayoutDashboard, MessageCircle, Shield } from 'lucide-react';
+import { Heart, User, Menu, X, LogOut, LayoutDashboard, MessageCircle, Shield, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import AuthModal from './AuthModal';
 import LanguageSelector from './LanguageSelector';
 import { Button } from './ui/button';
