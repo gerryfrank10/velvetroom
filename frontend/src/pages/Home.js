@@ -225,6 +225,12 @@ const Home = () => {
           </div>
         )}
       </div>
+
+      <ListingModal 
+        listing={selectedListing} 
+        isOpen={showModal} 
+        onClose={() => setShowModal(false)} 
+      />
     </div>
   );
 };
