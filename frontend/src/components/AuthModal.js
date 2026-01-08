@@ -49,7 +49,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </button>
 
         <h2 className="text-3xl font-bold mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-          <span className="text-gradient">{isLogin ? 'Welcome Back' : 'Join VelvetRoom'}</span>
+          <span className="text-gradient">{isLogin ? 'Welcome Back' : 'Join DurexEthiopia'}</span>
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
