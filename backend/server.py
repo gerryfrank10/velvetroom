@@ -165,6 +165,95 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 
 # ============ AUTH ROUTES ============
 
+@api_router.get("/auth/google")
+async def google_login(request):
+    """Initiate Google OAuth flow"""
+    redirect_uri = os.environ.get('GOOGLE_REDIRECT_URI', 'http://localhost:8001/api/auth/google/callback')
+    return await oauth.google.authorize_redirect(request, redirect_uri)
+
+@api_router.get("/auth/google/callback")
+async def google_callback(request):
+    """Google OAuth callback"""
+    try:
+        token = await oauth.google.authorize_access_token(request)
+        user_info = token.get('userinfo')
+        
+        if not user_info:
+            raise HTTPException(status_code=400, detail="Failed to get user info")
+        
+        email = user_info.get('email')
+        name = user_info.get('name', email.split('@')[0])
+        
+        # Check if user exists
+        user = await db.users.find_one({"email": email}, {"_id": 0})
+        
+        if not user:
+            # Create new user
+            new_user = User(email=email, name=name)
+            user_dict = new_user.model_dump()
+            user_dict["oauth_provider"] = "google"
+            user_dict["oauth_id"] = user_info.get('sub')
+            user_dict["profile_image"] = user_info.get('picture')
+            user_dict["created_at"] = user_dict["created_at"].isoformat()
+            user_dict["last_active"] = user_dict["last_active"].isoformat()
+            await db.users.insert_one(user_dict)
+            user = new_user.model_dump()
+        
+        jwt_token = create_token(user["id"])
+        frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+        return RedirectResponse(url=f"{frontend_url}/auth/callback?token={jwt_token}")
+    except Exception as e:
+        logger.error(f"Google OAuth error: {e}")
+        raise HTTPException(status_code=400, detail="OAuth authentication failed")
+
+@api_router.get("/auth/facebook")
+async def facebook_login(request):
+    """Initiate Facebook OAuth flow"""
+    redirect_uri = os.environ.get('FACEBOOK_REDIRECT_URI', 'http://localhost:8001/api/auth/facebook/callback')
+    return await oauth.facebook.authorize_redirect(request, redirect_uri)
+
+@api_router.get("/auth/facebook/callback")
+async def facebook_callback(request):
+    """Facebook OAuth callback"""
+    try:
+        token = await oauth.facebook.authorize_access_token(request)
+        
+        # Get user info from Facebook
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                'https://graph.facebook.com/me',
+                params={'fields': 'id,name,email,picture', 'access_token': token['access_token']}
+            )
+            user_info = resp.json()
+        
+        email = user_info.get('email')
+        if not email:
+            raise HTTPException(status_code=400, detail="Email not provided by Facebook")
+        
+        name = user_info.get('name', email.split('@')[0])
+        
+        # Check if user exists
+        user = await db.users.find_one({"email": email}, {"_id": 0})
+        
+        if not user:
+            # Create new user
+            new_user = User(email=email, name=name)
+            user_dict = new_user.model_dump()
+            user_dict["oauth_provider"] = "facebook"
+            user_dict["oauth_id"] = user_info.get('id')
+            user_dict["profile_image"] = user_info.get('picture', {}).get('data', {}).get('url')
+            user_dict["created_at"] = user_dict["created_at"].isoformat()
+            user_dict["last_active"] = user_dict["last_active"].isoformat()
+            await db.users.insert_one(user_dict)
+            user = new_user.model_dump()
+        
+        jwt_token = create_token(user["id"])
+        frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+        return RedirectResponse(url=f"{frontend_url}/auth/callback?token={jwt_token}")
+    except Exception as e:
+        logger.error(f"Facebook OAuth error: {e}")
+        raise HTTPException(status_code=400, detail="OAuth authentication failed")
+
 @api_router.post("/auth/register", response_model=TokenResponse)
 async def register(user_data: UserCreate):
     # Check if user exists
