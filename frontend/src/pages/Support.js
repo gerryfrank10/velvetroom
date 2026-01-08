@@ -31,7 +31,7 @@ const Support = () => {
     },
     {
       question: "How do payments work?",
-      answer: "All payments are handled directly between clients and service providers. VelvetRoom does not process payments for services. We only charge for premium features like VIP membership and featured listings."
+      answer: "All payments are handled directly between clients and service providers. DurexEthiopia does not process payments for services. We only charge for premium features like VIP membership and featured listings."
     },
     {
       question: "What if I encounter a problem?",
