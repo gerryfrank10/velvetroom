@@ -1,23 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Globe } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { useLanguage } from '../context/LanguageContext';
 
 const LanguageSelector = () => {
-  const { language, changeLanguage } = useLanguage();
+  const [language, setLanguage] = useState('en');
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' }
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+    { code: 'pt', name: 'Português', flag: '🇵🇹' },
+    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+    { code: 'zh', name: '中文', flag: '🇨🇳' },
+    { code: 'ja', name: '日本語', flag: '🇯🇵' },
+    { code: 'ar', name: 'العربية', flag: '🇸🇦' }
   ];
 
+  const handleLanguageChange = (value) => {
+    setLanguage(value);
+    // TODO: Implement language switching logic
+    // This will be implemented later with i18n library
+    console.log('Language changed to:', value);
+  };
+
   return (
-    <Select value={language} onValueChange={changeLanguage}>
-      <SelectTrigger className="w-[140px] bg-white/5 border-white/10 text-foreground" data-testid="language-selector">
+    <Select value={language} onValueChange={handleLanguageChange}>
+      <SelectTrigger className="w-[140px] bg-white/5 border-white/10 text-white" data-testid="language-selector">
         <Globe className="w-4 h-4 mr-2" strokeWidth={1.5} />
         <SelectValue />
       </SelectTrigger>
-      <SelectContent className="bg-zinc-950 dark:bg-zinc-950 border-white/10">
+      <SelectContent className="bg-zinc-950 border-white/10">
         {languages.map((lang) => (
           <SelectItem key={lang.code} value={lang.code} className="text-white">
             <span className="mr-2">{lang.flag}</span>

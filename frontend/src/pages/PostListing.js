@@ -25,21 +25,7 @@ const AVAILABLE_SERVICES = [
   'Virtual Sessions',
   'Photography',
   'Dance',
-  'BDSM',
-  'Tantric',
-  'Couples',
   'Other Services'
-];
-
-const ETHNICITY_OPTIONS = [
-  'Asian',
-  'Black',
-  'Latina',
-  'Arab',
-  'White/Caucasian',
-  'Indian',
-  'Mixed',
-  'Other'
 ];
 
 const PostListing = () => {

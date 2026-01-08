@@ -173,7 +173,11 @@ const ListingDetail = () => {
                 <div className="space-y-4 mb-6">
                   <div className="flex items-center space-x-3 text-gray-300">
                     <MapPin className="w-5 h-5 text-fuchsia-500" strokeWidth={1.5} />
-                    <span>{listing.location}</span>
+                    <span>
+                      {listing.location
+                      ? `${listing.location.city || ''}, ${listing.location.country || ''}`
+                      : 'Location not specified'}
+                    </span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <DollarSign className="w-5 h-5 text-fuchsia-500" strokeWidth={1.5} />

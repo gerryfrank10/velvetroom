@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, User, Menu, X, LogOut, LayoutDashboard, MessageCircle, Shield, Sun, Moon } from 'lucide-react';
+import { Heart, User, Menu, X, LogOut, LayoutDashboard, MessageCircle, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import AuthModal from './AuthModal';
 import LanguageSelector from './LanguageSelector';
 import { Button } from './ui/button';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -37,14 +35,6 @@ const Navbar = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
               <LanguageSelector />
-              <button
-                onClick={toggleTheme}
-                className="text-gray-400 hover:text-white transition-colors"
-                data-testid="theme-toggle"
-                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              >
-                {theme === 'dark' ? <Sun className="w-5 h-5" strokeWidth={1.5} /> : <Moon className="w-5 h-5" strokeWidth={1.5} />}
-              </button>
               {user ? (
                 <>
                   <Link to="/post" data-testid="post-listing-link">

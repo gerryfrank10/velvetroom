@@ -78,28 +78,6 @@ code {
         --ring: 292 91% 57%;
         --radius: 0.75rem;
     }
-
-    .light {
-        --background: 0 0% 100%;
-        --foreground: 0 0% 5%;
-        --card: 0 0% 98%;
-        --card-foreground: 0 0% 5%;
-        --popover: 0 0% 98%;
-        --popover-foreground: 0 0% 5%;
-        --primary: 292 91% 57%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 262 83% 58%;
-        --secondary-foreground: 0 0% 100%;
-        --muted: 0 0% 95%;
-        --muted-foreground: 215 20% 40%;
-        --accent: 38 92% 50%;
-        --accent-foreground: 0 0% 100%;
-        --destructive: 0 84% 60%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 90%;
-        --input: 0 0% 95%;
-        --ring: 292 91% 57%;
-    }
 }
 
 @layer base {

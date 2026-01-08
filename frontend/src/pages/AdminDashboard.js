@@ -107,7 +107,11 @@ const AdminDashboard = () => {
         <p className="text-sm text-gray-400 mb-2 line-clamp-2">{listing.description}</p>
         <div className="flex items-center justify-between mb-4">
           <span className="text-fuchsia-500 font-bold">${listing.price}</span>
-          <span className="text-xs text-gray-500">{listing.location}</span>
+          <span className="text-xs text-gray-500">
+            {listing.location
+            ? `${listing.location.city}, ${listing.location.country}`
+            : 'Location not specified'}
+          </span>
         </div>
         <div className="text-xs text-gray-500 mb-4">
           Posted by: {listing.user_name}

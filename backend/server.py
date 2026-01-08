@@ -1,7 +1,6 @@
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form, Depends, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -18,19 +17,10 @@ import shutil
 from PIL import Image, ImageDraw, ImageFont
 import cv2
 import subprocess
-from authlib.integrations.starlette_client import OAuth
-import httpx
+import aiofiles
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
-
-# App Configuration from Environment
-APP_NAME = os.environ.get('APP_NAME', 'DurexEthiopia')
-APP_TITLE = os.environ.get('APP_TITLE', 'DurexEthiopia')
-COUNTRY_CODE = os.environ.get('COUNTRY_CODE', 'ethiopia')
-AGE_VERIFY = os.environ.get('AGE_VERIFY', 'TRUE').upper() == 'TRUE'
-MIN_AGE = int(os.environ.get('MIN_AGE', '18'))
-WATERMARK_TEXT = os.environ.get('WATERMARK_TEXT', f'{APP_NAME}.com')
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -42,31 +32,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = os.environ.get('JWT_SECRET', 'your-secret-key-change-in-production')
 ALGORITHM = "HS256"
 security = HTTPBearer()
-
-# OAuth Configuration
-oauth = OAuth()
-
-# Google OAuth
-if os.environ.get('GOOGLE_CLIENT_ID'):
-    oauth.register(
-        name='google',
-        client_id=os.environ.get('GOOGLE_CLIENT_ID'),
-        client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
-        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-        client_kwargs={'scope': 'openid email profile'}
-    )
-
-# Facebook OAuth
-if os.environ.get('FACEBOOK_APP_ID'):
-    oauth.register(
-        name='facebook',
-        client_id=os.environ.get('FACEBOOK_APP_ID'),
-        client_secret=os.environ.get('FACEBOOK_APP_SECRET'),
-        authorize_url='https://www.facebook.com/v18.0/dialog/oauth',
-        access_token_url='https://graph.facebook.com/v18.0/oauth/access_token',
-        userinfo_endpoint='https://graph.facebook.com/me?fields=id,name,email,picture',
-        client_kwargs={'scope': 'email public_profile'}
-    )
 
 # Create uploads directory
 UPLOADS_DIR = ROOT_DIR / 'uploads'
@@ -103,7 +68,6 @@ class User(BaseModel):
     vip_expiry: Optional[datetime] = None
     bio: Optional[str] = None
     profile_image: Optional[str] = None
-    ethnicity: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     last_active: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -140,31 +104,10 @@ class Listing(BaseModel):
     videos: List[str] = []
     user_id: str
     user_name: str
-    user_ethnicity: Optional[str] = None
     featured: bool = False
     status: str = "pending"  # pending, approved, rejected
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     views: int = 0
-
-class VideoForSale(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    user_id: str
-    title: str
-    description: str
-    video_url: str
-    thumbnail_url: Optional[str] = None
-    price: float
-    duration_seconds: Optional[int] = None
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-class VideoPurchase(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    video_id: str
-    buyer_id: str
-    price: float
-    purchased_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class MessageCreate(BaseModel):
     to_user_id: str
@@ -340,20 +283,21 @@ async def upload_file(file: UploadFile = File(...), current_user: dict = Depends
     file_ext = Path(file.filename).suffix.lower()
     filename = f"{uuid.uuid4()}{file_ext}"
     file_path = UPLOADS_DIR / filename
-    
-    # Save file
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    # Add watermark based on file type
-    if file_ext in ['.jpg', '.jpeg', '.png', '.webp']:
-        add_watermark_to_image(file_path)
-    elif file_ext in ['.mp4', '.mov', '.avi', '.webm']:
-        add_watermark_to_video(file_path)
-    
-    # Return URL
-    backend_url = os.environ.get('BACKEND_URL', 'http://localhost:8001')
-    return {"url": f"{backend_url}/uploads/{filename}", "type": "video" if file_ext in ['.mp4', '.mov', '.avi', '.webm'] else "image"}
+
+    chunk_size = 8 * 1024 * 1024  # 8MB (much faster)
+
+    async with aiofiles.open(file_path, "wb") as out_file:
+        while chunk := await file.read(chunk_size):
+            await out_file.write(chunk)
+
+    backend_url = os.environ.get(
+        "BACKEND_URL", "http://durexethiopia.com"
+    )
+
+    return {
+        "url": f"{backend_url}/uploads/{filename}",
+        "type": "video" if file_ext in [".mp4", ".mov", ".avi", ".webm"] else "image"
+    }
 
 # ============ LISTING ROUTES ============
 
@@ -388,8 +332,7 @@ async def create_listing(
         pricing_tiers=json.loads(pricing_tiers) if pricing_tiers else [],
         services=json.loads(services) if services else [],
         user_id=current_user["id"],
-        user_name=current_user["name"],
-        user_ethnicity=current_user.get("ethnicity")
+        user_name=current_user["name"]
     )
     
     listing_dict = listing.model_dump()
@@ -689,81 +632,6 @@ async def update_listing_status(
         {"$set": {"status": action.status}}
     )
     return {"message": f"Listing {action.status}"}
-
-# ============ VIDEO MARKETPLACE ============
-
-@api_router.post("/videos/sale", response_model=VideoForSale)
-async def create_video_for_sale(
-    title: str = Form(...),
-    description: str = Form(...),
-    video_url: str = Form(...),
-    price: float = Form(...),
-    thumbnail_url: Optional[str] = Form(None),
-    duration_seconds: Optional[int] = Form(None),
-    current_user: dict = Depends(get_current_user)
-):
-    video = VideoForSale(
-        user_id=current_user["id"],
-        title=title,
-        description=description,
-        video_url=video_url,
-        thumbnail_url=thumbnail_url,
-        price=price,
-        duration_seconds=duration_seconds
-    )
-    
-    video_dict = video.model_dump()
-    video_dict["created_at"] = video_dict["created_at"].isoformat()
-    
-    await db.videos_for_sale.insert_one(video_dict)
-    return video
-
-@api_router.get("/videos/sale/user/{user_id}", response_model=List[VideoForSale])
-async def get_user_videos_for_sale(user_id: str):
-    videos = await db.videos_for_sale.find({"user_id": user_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
-    
-    for video in videos:
-        if isinstance(video["created_at"], str):
-            video["created_at"] = datetime.fromisoformat(video["created_at"])
-    
-    return videos
-
-@api_router.post("/videos/purchase/{video_id}")
-async def purchase_video(video_id: str, current_user: dict = Depends(get_current_user)):
-    video = await db.videos_for_sale.find_one({"id": video_id}, {"_id": 0})
-    if not video:
-        raise HTTPException(status_code=404, detail="Video not found")
-    
-    # Check if already purchased
-    existing = await db.video_purchases.find_one({"video_id": video_id, "buyer_id": current_user["id"]}, {"_id": 0})
-    if existing:
-        return {"message": "Already purchased", "video_url": video["video_url"]}
-    
-    purchase = VideoPurchase(
-        video_id=video_id,
-        buyer_id=current_user["id"],
-        price=video["price"]
-    )
-    
-    purchase_dict = purchase.model_dump()
-    purchase_dict["purchased_at"] = purchase_dict["purchased_at"].isoformat()
-    
-    await db.video_purchases.insert_one(purchase_dict)
-    
-    return {"message": "Purchase successful", "video_url": video["video_url"]}
-
-@api_router.get("/videos/purchased")
-async def get_purchased_videos(current_user: dict = Depends(get_current_user)):
-    purchases = await db.video_purchases.find({"buyer_id": current_user["id"]}, {"_id": 0}).to_list(1000)
-    video_ids = [p["video_id"] for p in purchases]
-    
-    videos = await db.videos_for_sale.find({"id": {"$in": video_ids}}, {"_id": 0}).to_list(1000)
-    
-    for video in videos:
-        if isinstance(video["created_at"], str):
-            video["created_at"] = datetime.fromisoformat(video["created_at"])
-    
-    return videos
 
 # ============ STATS ============
 
