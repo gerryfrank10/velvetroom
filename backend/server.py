@@ -17,6 +17,7 @@ import shutil
 from PIL import Image, ImageDraw, ImageFont
 import cv2
 import subprocess
+import aiofiles
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -282,20 +283,21 @@ async def upload_file(file: UploadFile = File(...), current_user: dict = Depends
     file_ext = Path(file.filename).suffix.lower()
     filename = f"{uuid.uuid4()}{file_ext}"
     file_path = UPLOADS_DIR / filename
-    
-    # Save file
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    # Add watermark based on file type
-    if file_ext in ['.jpg', '.jpeg', '.png', '.webp']:
-        add_watermark_to_image(file_path)
-    elif file_ext in ['.mp4', '.mov', '.avi', '.webm']:
-        add_watermark_to_video(file_path)
-    
-    # Return URL
-    backend_url = os.environ.get('BACKEND_URL', 'http://localhost:8001')
-    return {"url": f"{backend_url}/uploads/{filename}", "type": "video" if file_ext in ['.mp4', '.mov', '.avi', '.webm'] else "image"}
+
+    chunk_size = 8 * 1024 * 1024  # 8MB (much faster)
+
+    async with aiofiles.open(file_path, "wb") as out_file:
+        while chunk := await file.read(chunk_size):
+            await out_file.write(chunk)
+
+    backend_url = os.environ.get(
+        "BACKEND_URL", "http://durexethiopia.com"
+    )
+
+    return {
+        "url": f"{backend_url}/uploads/{filename}",
+        "type": "video" if file_ext in [".mp4", ".mov", ".avi", ".webm"] else "image"
+    }
 
 # ============ LISTING ROUTES ============
 

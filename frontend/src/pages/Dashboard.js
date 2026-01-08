@@ -208,7 +208,11 @@ const Dashboard = () => {
                       </h3>
                       <div className="flex items-center justify-between mb-4">
                         <span className="text-fuchsia-500 font-bold">${listing.price}</span>
-                        <span className="text-xs text-gray-500">{listing.location}</span>
+                        <span className="text-xs text-gray-500">
+                          {listing.location
+                          ? `${listing.location.city}, ${listing.location.country}`
+                          : 'Location not specified'}
+                        </span>
                       </div>
                       <div className="flex space-x-2">
                         <Button

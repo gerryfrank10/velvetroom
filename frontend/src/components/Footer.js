@@ -92,7 +92,7 @@ const Footer = () => {
         {/* Bottom */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2024 VelvetRoom. All rights reserved.
+            © 1980. All rights reserved.
           </p>
           <div className="flex items-center space-x-1 text-gray-400 text-sm">
             <span>Made with</span>
