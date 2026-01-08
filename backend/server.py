@@ -1,6 +1,7 @@
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form, Depends, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -17,6 +18,8 @@ import shutil
 from PIL import Image, ImageDraw, ImageFont
 import cv2
 import subprocess
+from authlib.integrations.starlette_client import OAuth
+import httpx
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
