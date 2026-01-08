@@ -121,7 +121,7 @@ const ListingDetail = () => {
                     <img
                       src={allMedia[selectedImage] || images[0]}
                       alt={listing.title}
-                      className="w-full h-full object-cover blur-reveal"
+                      className="w-full h-full object-cover "
                     />
                   )}
                   {listing.featured && (

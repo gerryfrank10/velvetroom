@@ -1,6 +1,8 @@
 import React from 'react';
 import { Sparkles, Shield, Heart, Users } from 'lucide-react';
 
+const TITLE = `${process.env.REACT_APP_TITLE}`;
+
 const About = () => {
   return (
     <div className="min-h-screen pt-20 pb-16">
@@ -12,7 +14,7 @@ const About = () => {
             style={{ fontFamily: 'Playfair Display, serif' }}
             data-testid="about-heading"
           >
-            <span className="text-gradient">About VelvetRoom</span>
+            <span className="text-gradient">About {TITLE}</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             The world's most exclusive platform for premium companionship and adult services.

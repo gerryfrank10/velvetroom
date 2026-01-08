@@ -16,6 +16,7 @@ const Navbar = () => {
     logout();
     navigate('/');
   };
+  const TITLE = `${process.env.REACT_APP_TITLE}`;
 
   return (
     <>
@@ -28,7 +29,7 @@ const Navbar = () => {
                 <span className="text-white font-bold text-xl">V</span>
               </div>
               <span className="text-2xl font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>
-                <span className="text-gradient">VelvetRoom</span>
+                <span className="text-gradient">{TITLE}</span>
               </span>
             </Link>
 

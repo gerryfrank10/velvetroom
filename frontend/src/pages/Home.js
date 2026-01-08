@@ -192,7 +192,7 @@ const Home = () => {
                   <img
                     src={listing.images[0] || 'https://images.unsplash.com/photo-1759771716328-db403c219f56?crop=entropy&cs=srgb&fm=jpg&q=85'}
                     alt={listing.title}
-                    className="listing-card-image w-full h-full object-cover blur-reveal"
+                    className="listing-card-image w-full h-full object-cover "
                   />
                   {listing.featured && (
                     <div className="absolute top-3 right-3 bg-amber-500 text-black px-3 py-1 rounded-full text-xs font-bold flex items-center space-x-1 badge-verified">

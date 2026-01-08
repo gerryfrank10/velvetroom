@@ -91,7 +91,7 @@ const ListingModal = ({ listing, isOpen, onClose }) => {
                   <img
                     src={allMedia[selectedMedia] || images[0]}
                     alt={listing.title}
-                    className="w-full h-full object-cover blur-reveal"
+                    className="w-full h-full object-cover "
                   />
                 )}
                 {listing.featured && (
