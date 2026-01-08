@@ -35,7 +35,7 @@ const Support = () => {
     },
     {
       question: "What if I encounter a problem?",
-      answer: "Contact our 24/7 support team via email at support@velvetroom.com or use the contact form. We typically respond within 2-4 hours."
+      answer: "Contact our 24/7 support team via email at support@durexethiopia.com or use the contact form. We typically respond within 2-4 hours."
     }
   ];
 
