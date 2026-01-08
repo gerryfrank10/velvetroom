@@ -14,7 +14,7 @@ const Footer = () => {
                 <span className="text-white font-bold text-xl">V</span>
               </div>
               <span className="text-2xl font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>
-                <span className="text-gradient">VelvetRoom</span>
+                <span className="text-gradient">DurexEthiopia</span>
               </span>
             </div>
             <p className="text-gray-400 text-sm">
