@@ -24,6 +24,14 @@ import httpx
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# App Configuration from Environment
+APP_NAME = os.environ.get('APP_NAME', 'DurexEthiopia')
+APP_TITLE = os.environ.get('APP_TITLE', 'DurexEthiopia')
+COUNTRY_CODE = os.environ.get('COUNTRY_CODE', 'ethiopia')
+AGE_VERIFY = os.environ.get('AGE_VERIFY', 'TRUE').upper() == 'TRUE'
+MIN_AGE = int(os.environ.get('MIN_AGE', '18'))
+WATERMARK_TEXT = os.environ.get('WATERMARK_TEXT', f'{APP_NAME}.com')
+
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
@@ -34,6 +42,31 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = os.environ.get('JWT_SECRET', 'your-secret-key-change-in-production')
 ALGORITHM = "HS256"
 security = HTTPBearer()
+
+# OAuth Configuration
+oauth = OAuth()
+
+# Google OAuth
+if os.environ.get('GOOGLE_CLIENT_ID'):
+    oauth.register(
+        name='google',
+        client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+        client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={'scope': 'openid email profile'}
+    )
+
+# Facebook OAuth
+if os.environ.get('FACEBOOK_APP_ID'):
+    oauth.register(
+        name='facebook',
+        client_id=os.environ.get('FACEBOOK_APP_ID'),
+        client_secret=os.environ.get('FACEBOOK_APP_SECRET'),
+        authorize_url='https://www.facebook.com/v18.0/dialog/oauth',
+        access_token_url='https://graph.facebook.com/v18.0/oauth/access_token',
+        userinfo_endpoint='https://graph.facebook.com/me?fields=id,name,email,picture',
+        client_kwargs={'scope': 'email public_profile'}
+    )
 
 # Create uploads directory
 UPLOADS_DIR = ROOT_DIR / 'uploads'
