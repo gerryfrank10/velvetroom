@@ -25,7 +25,7 @@ const About = () => {
             Our Mission
           </h2>
           <p className="text-gray-300 leading-relaxed mb-4">
-            VelvetRoom was founded with a clear vision: to create a safe, sophisticated, and discreet platform where adults can connect for premium companionship services. We believe in empowering service providers and offering clients an unparalleled experience.
+            DurexEthiopia was founded with a clear vision: to create a safe, sophisticated, and discreet platform where adults can connect for premium companionship services. We believe in empowering service providers and offering clients an unparalleled experience.
           </p>
           <p className="text-gray-300 leading-relaxed">
             Our platform combines cutting-edge technology with a commitment to privacy, security, and quality. Every listing is carefully moderated to ensure authenticity and professionalism.
