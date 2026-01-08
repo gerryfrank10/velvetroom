@@ -50,8 +50,8 @@ const Contact = () => {
               <Mail className="w-8 h-8 text-fuchsia-500 mb-3" />
               <h3 className="text-lg font-bold mb-2">Email Us</h3>
               <p className="text-gray-400 text-sm mb-2">For general inquiries</p>
-              <a href="mailto:support@velvetroom.com" className="text-fuchsia-500 hover:underline">
-                support@velvetroom.com
+              <a href="mailto:support@durexethiopia.com" className="text-fuchsia-500 hover:underline">
+                support@durexethiopia.com
               </a>
             </div>
 
