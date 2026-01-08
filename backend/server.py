@@ -304,7 +304,7 @@ def add_watermark_to_image(image_path: Path) -> Path:
         
         # Create watermark
         draw = ImageDraw.Draw(img)
-        watermark_text = "VelvetRoom.com"
+        watermark_text = WATERMARK_TEXT
         
         # Calculate position (bottom right)
         font_size = int(min(width, height) * 0.05)
@@ -345,7 +345,7 @@ def add_watermark_to_video(video_path: Path) -> Path:
         output_path = video_path.parent / f"watermarked_{video_path.name}"
         
         # Use ffmpeg to add text watermark
-        watermark_text = "VelvetRoom.com"
+        watermark_text = WATERMARK_TEXT
         
         cmd = [
             'ffmpeg', '-i', str(video_path),
