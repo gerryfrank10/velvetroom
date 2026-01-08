@@ -724,6 +724,19 @@ async def update_listing_status(
 
 # ============ STATS ============
 
+@api_router.get("/config")
+async def get_app_config():
+    """Get public app configuration"""
+    return {
+        "app_name": APP_NAME,
+        "app_title": APP_TITLE,
+        "country_code": COUNTRY_CODE,
+        "age_verify": AGE_VERIFY,
+        "min_age": MIN_AGE,
+        "has_google_oauth": bool(os.environ.get('GOOGLE_CLIENT_ID')),
+        "has_facebook_oauth": bool(os.environ.get('FACEBOOK_APP_ID'))
+    }
+
 @api_router.get("/locations")
 async def get_locations():
     """Get hierarchical location data"""
