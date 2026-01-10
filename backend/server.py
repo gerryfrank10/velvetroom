@@ -95,6 +95,9 @@ class Listing(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
     description: str
+    age: Optional[int] = None
+    race: Optional[str] = None
+    gender: Optional[str] = None
     price: float
     pricing_tiers: List[dict] = []  # [{"hours": 1, "price": 100}, {"hours": 2, "price": 180}]
     services: List[str] = []  # ["Massage", "Companionship", "Travel"]
