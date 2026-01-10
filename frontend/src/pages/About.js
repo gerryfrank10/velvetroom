@@ -1,6 +1,8 @@
 import React from 'react';
 import { Sparkles, Shield, Heart, Users } from 'lucide-react';
 
+const TITLE = `${process.env.REACT_APP_TITLE}`;
+
 const About = () => {
   return (
     <div className="min-h-screen pt-20 pb-16">
@@ -12,7 +14,7 @@ const About = () => {
             style={{ fontFamily: 'Playfair Display, serif' }}
             data-testid="about-heading"
           >
-            <span className="text-gradient">About DurexEthiopia</span>
+            <span className="text-gradient">About {TITLE}</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             The world's most exclusive platform for premium companionship and adult services.
@@ -25,7 +27,7 @@ const About = () => {
             Our Mission
           </h2>
           <p className="text-gray-300 leading-relaxed mb-4">
-            DurexEthiopia was founded with a clear vision: to create a safe, sophisticated, and discreet platform where adults can connect for premium companionship services. We believe in empowering service providers and offering clients an unparalleled experience.
+            {TITLE} was founded with a clear vision: to create a safe, sophisticated, and discreet platform where adults can connect for premium companionship services. We believe in empowering service providers and offering clients an unparalleled experience.
           </p>
           <p className="text-gray-300 leading-relaxed">
             Our platform combines cutting-edge technology with a commitment to privacy, security, and quality. Every listing is carefully moderated to ensure authenticity and professionalism.

@@ -1,55 +1,26 @@
 {
-  "Tanzania": {
-    "Dar es Salaam": {
-      "Ilala": ["Kariakoo", "Buguruni", "Mchikichini", "Gerezani", "Kisutu", "Upanga West", "Upanga East", "Jangwani", "Mchafukoge", "Kivukoni", "Kiwalani"],
-      "Kinondoni": ["Masaki", "Mikocheni", "Sinza", "Mbezi", "Makumbusho", "Mwananyamala", "Tandale", "Manzese", "Hananasif", "Msasani", "Oyster Bay", "Ada Estate", "Kawe", "Kimara", "Goba", "Kunduchi", "Mbezi Beach", "Tegeta"],
-      "Temeke": ["Chang'ombe", "Kurasini", "Mbagala", "Keko", "Mtoni", "Sandali", "Temeke", "Tandika", "Azimio", "Chamazi", "Vijibweni", "Yombo Vituka", "Chanika"],
-      "Kigamboni": ["Kigamboni", "Kibada", "Pembamnazi", "Tungi", "Vijibweni"],
-      "Ubungo": ["Mburahati", "Ubungo", "Kinondoni", "Makongo", "Manzese", "Sinza"]
-    },
-    "Dodoma": {"Dodoma Urban": ["Central", "Kikuyu", "Chamwino", "Ntyuka", "Hombolo", "Bahi", "Mpwapwa"]},
-    "Mwanza": {"Ilemela": ["Ilemela", "Nyegezi", "Pasiansi", "Igoma", "Sangabuye", "Buhongwa"], "Nyamagana": ["Nyamagana", "Pamba", "Kirumba", "Mahina", "Mbugani", "Mhandu"]},
-    "Arusha": {"Arusha City": ["Central", "Themi", "Ngarenaro", "Unga Limited", "Lemara", "Kijenge", "Sekei", "Kaloleni", "Sombetini", "Moshono"]},
-    "Mbeya": {"Mbeya City": ["Iyunga", "Iganzo", "Mwanjelwa", "Iyela", "Isyesye", "Nsalaga", "Itende"]},
-    "Morogoro": {"Morogoro Urban": ["Kingo", "Mafiga", "Kihonda", "Mazimbu", "Kilakala", "Msamvu", "Kiwanja cha Ndege"]},
-    "Tanga": {"Tanga City": ["Central", "Ngamiani Kaskazini", "Ngamiani Kusini", "Chumbageni", "Mzingani", "Tongoni"]},
-    "Zanzibar": {"Zanzibar Urban": ["Stone Town", "Ng'ambo", "Mlandege", "Kilimani", "Mwanakwerekwe", "Malindi", "Kikwajuni", "Shangani", "Gulioni"], "Zanzibar South": ["Paje", "Jambiani", "Makunduchi", "Kizimkazi"], "Zanzibar North": ["Nungwi", "Kendwa", "Matemwe", "Kiwengwa", "Pwani Mchangani"]},
-    "Moshi": {"Moshi Urban": ["Majengo", "Rau", "Kiboriloni", "Pasua", "Mawenzi", "Karanga", "Bondeni"]},
-    "Tabora": {"Tabora Urban": ["Central", "Ipuli", "Kiloleni", "Kitete", "Gongoni"]},
-    "Kigoma": {"Kigoma Urban": ["Gungu", "Mwanga", "Bangwe", "Kigoma Mjini", "Katubuka"]},
-    "Iringa": {"Iringa Urban": ["Gangilonga", "Kihesa", "Mivinjeni", "Makorongoni", "Mkwawa"]},
-    "Songea": {"Songea Urban": ["Matogoro", "Mshangano", "Mjimwema", "Liganga"]},
-    "Sumbawanga": {"Sumbawanga Urban": ["Mpui", "Nkandasi", "Laela", "Moravian"]},
-    "Musoma": {"Musoma Urban": ["Bweri", "Makoko", "Mwisenge", "Nyamuswa"]}
-  },
   "Ethiopia": {
     "Addis Ababa": {
-      "Addis Ketema": ["Merkato", "Piazza", "Addis Ketema", "Gojjam Berenda", "Tekle Haymanot"],
-      "Kirkos": ["Aware", "Ferensay Legasion", "Kirkos", "Kera", "Megenagna"],
-      "Bole": ["Bole", "Bole Mikael", "Bole Bulbula", "Bole Rwanda", "CMC", "Mexico", "Hayahulet", "Bole Medhanialem", "Bole Atlas", "Edna Mall Area", "Kazanchis"],
-      "Yeka": ["Gerji", "Ayat", "Haya Hulet", "Megenagna", "Yeka Abado", "Shiro Meda"],
-      "Arada": ["Sidist Kilo", "Arat Kilo", "Piazza", "Arada", "Sebategna", "Shiromeda"],
-      "Gulele": ["Gulele", "Entoto", "Shiromeda", "Asko", "Wolo Sefer"],
-      "Lideta": ["Lideta", "Autobus Tera", "Menilik Square", "Arat Kilo", "Ambassador"],
-      "Nifas Silk-Lafto": ["Nifas Silk", "Lafto", "Mekanisa", "Akaki", "Kaliti", "Torhailoch", "Gofa Sefer"],
-      "Kolfe Keranio": ["Kolfe", "Keranio", "Sebategna", "Gurd Shola", "Summit"],
-      "Akaky Kaliti": ["Akaki", "Kaliti", "Dukem Road", "Industrial Area"],
-      "Lemi Kura": ["Lemi Kura", "Kality", "Torhailoch", "Gotera", "Koye Feche"]
+      "Addis Ketema": ["Arat Kilo", "Merkato", "Shola"],
+      "Akaki Kality": ["Akaki", "Kality", "Bole"],
+      "Bole": ["Bole Airport", "Bole Medhane Alem", "Gelan"],
+      "Gullele": ["Gullele Subcity 1", "Gullele Subcity 2"]
     },
-    "Dire Dawa": {"Dire Dawa City": ["Kezira", "Magala", "Dechatu", "Goro", "Legehare", "Ashewa", "Melka Jebdu"]},
-    "Mekelle": {"Mekelle City": ["Adihawsi", "Adi-Shehashiho", "Ayder", "Hawelti", "Kedamay Weyane", "Quiha", "Hadnet"]},
-    "Gondar": {"Gondar City": ["Arada", "Fasil", "Piassa", "Maraki", "Kebele 01", "Kebele 02", "Kebele 03", "Airport Area"]},
-    "Hawassa": {"Hawassa City": ["Menaharia", "Alamura", "Haik Dar", "Addis Ketema", "Bahil Adarash", "Piassa", "Hidasie"]},
-    "Bahir Dar": {"Bahir Dar City": ["Belay Zeleke", "Shumabo", "Abay", "Tis Abay", "Tana Haik", "Hidar 11", "Kebele 01-18"]},
-    "Adama": {"Adama City": ["Bole", "Dherita", "Biftu Jalala", "Wonji Road", "Addis Ketema", "Tulu Dimtu"]},
-    "Jimma": {"Jimma City": ["Ajip", "Bosa Buna", "Hermata", "Kito Furdisa", "Mentina", "Ginjo Guduru"]},
-    "Dessie": {"Dessie City": ["Arada", "Menahariya", "Segno Gebeya", "Hote", "Kebele 01-12"]},
-    "Jijiga": {"Jijiga City": ["Karamarda", "Airport Area", "Jijiga Center", "Auto Sefer", "Kebele 01-09"]},
-    "Shashemene": {"Shashemene City": ["Bulchana", "Arada", "Kuyera", "Abosto", "Shenen Gibe"]},
-    "Bishoftu": {"Bishoftu City": ["Bole", "Furi", "Alemgena", "Kilinto", "Lake Area"]},
-    "Sodo": {"Sodo City": ["Merkato", "Arada", "Larena", "Abala", "Gallo"]},
-    "Arba Minch": {"Arba Minch City": ["Sikela", "Shecha", "Kulfo", "Nech Sar", "Lake Area"]},
-    "Hosaena": {"Hosaena City": ["Lebu", "Tiyo", "Wabe", "Fonko"]},
-    "Harar": {"Harar City": ["Jugol (Old Town)", "Aboker", "Erer", "Argobberi", "Sofi", "Kebele 01-19"]}
+    "Amhara": {
+      "Bahir Dar": ["Giworgis", "Fasil", "Tana"],
+      "Gondar": ["Kebele 01", "Kebele 02", "Kebele 03"]
+    },
+    "Oromia": {
+      "Adama": ["Kebele 01", "Kebele 02", "Kebele 03"],
+      "Bishoftu": ["Kebele 01", "Kebele 02"]
+    },
+    "Tigray": {
+      "Mekelle": ["Ayder", "Semien", "Hawelti"],
+      "Axum": ["City Center", "Adwa", "Maychew"]
+    },
+    "Southern Nations": {
+      "Hawassa": ["Adi Ha", "Tabor", "Millenium"],
+      "Arba Minch": ["Ganta", "Secha", "Shecha"]
+    }
   }
 }

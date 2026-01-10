@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 
+const TITLE = `${process.env.REACT_APP_TITLE}`;
+
 const Footer = () => {
   return (
     <footer className="glass-heavy border-t border-white/5 mt-auto">
@@ -14,7 +16,7 @@ const Footer = () => {
                 <span className="text-white font-bold text-xl">V</span>
               </div>
               <span className="text-2xl font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>
-                <span className="text-gradient">DurexEthiopia</span>
+                <span className="text-gradient">{TITLE}</span>
               </span>
             </div>
             <p className="text-gray-400 text-sm">

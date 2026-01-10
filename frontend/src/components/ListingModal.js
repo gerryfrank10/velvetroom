@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, MapPin, DollarSign, Eye, Heart, Mail, Phone, Sparkles, Clock } from 'lucide-react';
+import { X, MapPin, Eye, Heart, Mail, Phone, Sparkles, Clock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import axios from 'axios';
@@ -9,6 +9,13 @@ import { Badge } from './ui/badge';
 import AuthModal from './AuthModal';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const CURRENCY_SYMBOL = process.env.REACT_APP_CURRENCY_SYMBOL || '$';
+const CURRENCY_POSITION = process.env.REACT_APP_CURRENCY_POSITION || 'before';
+
+const formatPrice = (amount) =>
+  CURRENCY_POSITION === 'before'
+    ? `${CURRENCY_SYMBOL}${amount}`
+    : `${amount} ${CURRENCY_SYMBOL}`;
 
 const ListingModal = ({ listing, isOpen, onClose }) => {
   const { user } = useAuth();
@@ -91,7 +98,7 @@ const ListingModal = ({ listing, isOpen, onClose }) => {
                   <img
                     src={allMedia[selectedMedia] || images[0]}
                     alt={listing.title}
-                    className="w-full h-full object-cover blur-reveal"
+                    className="w-full h-full object-cover "
                   />
                 )}
                 {listing.featured && (
@@ -162,30 +169,32 @@ const ListingModal = ({ listing, isOpen, onClose }) => {
 
               {/* Pricing Tiers */}
               <div className="bg-white/5 rounded-lg p-4">
-                <p className="text-sm text-gray-400 mb-3">Pricing:</p>
-                {listing.pricing_tiers && listing.pricing_tiers.length > 0 ? (
-                  <div className="space-y-2">
-                    {listing.pricing_tiers.map((tier, idx) => (
-                      <div key={idx} className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <Clock className="w-4 h-4 text-fuchsia-500" strokeWidth={1.5} />
-                          <span className="text-white">{tier.hours} {tier.hours === 1 ? 'hour' : 'hours'}</span>
-                        </div>
-                        <div className="flex items-center space-x-1 text-fuchsia-500 font-bold">
-                          <DollarSign className="w-4 h-4" strokeWidth={1.5} />
-                          <span>{tier.price}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-1 text-fuchsia-500 font-bold text-xl">
-                    <DollarSign className="w-5 h-5" strokeWidth={1.5} />
-                    <span>{listing.price}</span>
-                    <span className="text-sm text-gray-400 ml-2">per hour</span>
-                  </div>
-                )}
-              </div>
+  <p className="text-sm text-gray-400 mb-3">Pricing:</p>
+
+  {listing.pricing_tiers && listing.pricing_tiers.length > 0 ? (
+    <div className="space-y-2">
+      {listing.pricing_tiers.map((tier, idx) => (
+        <div key={idx} className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Clock className="w-4 h-4 text-fuchsia-500" strokeWidth={1.5} />
+            <span className="text-white">
+              {tier.hours} {tier.hours === 1 ? 'hour' : 'hours'}
+            </span>
+          </div>
+
+          <span className="text-fuchsia-500 font-bold">
+            {formatPrice(tier.price)}
+          </span>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div className="flex items-center space-x-2 text-fuchsia-500 font-bold text-xl">
+      <span>{formatPrice(listing.price)}</span>
+      <span className="text-sm text-gray-400 font-normal">per hour</span>
+    </div>
+  )}
+</div>
 
               {/* Description */}
               <div>

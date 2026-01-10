@@ -1,13 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Search, MapPin, DollarSign, Star, Sparkles } from 'lucide-react';
+import { Search, MapPin, MessageCircle, Star, Sparkles } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import ListingModal from '../components/ListingModal';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const HEADER = `${process.env.REACT_APP_HEADER_TITLE}`;
+const TITLE = `${process.env.REACT_APP_TITLE}`;
+
+const CURRENCY_SYMBOL = process.env.REACT_APP_CURRENCY_SYMBOL || '$';
+const CURRENCY_POSITION = process.env.REACT_APP_CURRENCY_POSITION || 'before';
+
+const formatPrice = (amount) =>
+  CURRENCY_POSITION === 'before'
+    ? `${CURRENCY_SYMBOL}${amount}`
+    : `${amount} ${CURRENCY_SYMBOL}`;
+
+document.title = `${HEADER}`;
+
+const openWhatsApp = (phone) => {
+  if (!phone) return;
+
+  const message = encodeURIComponent(
+    `Hi, I saw your profile on ${TITLE} and I’d like to chat.`
+  );
+
+  const url = `https://wa.me/${phone}?text=${message}`;
+  window.open(url, '_blank');
+};
 
 const CATEGORIES = [
   'Escorts',
@@ -16,6 +39,12 @@ const CATEGORIES = [
   'Virtual',
   'Other'
 ];
+const COUNTRY_CODE = process.env.REACT_APP_COUNTRY_CODE || 'TZ';
+
+const REGIONS =
+  process.env[`REACT_APP_${COUNTRY_CODE}_REGIONS`]
+    ?.split(',')
+    .map(r => r.trim()) || [];
 
 const Home = () => {
   const [listings, setListings] = useState([]);
@@ -119,10 +148,10 @@ const Home = () => {
               <span className="text-gray-400 ml-2">Active Listings</span>
             </div>
             <div className="w-px h-6 bg-white/10"></div>
-            <div>
-              <span className="text-fuchsia-500 font-bold text-2xl">{stats.total_users}</span>
-              <span className="text-gray-400 ml-2">Members</span>
-            </div>
+            {/*<div>*/}
+            {/*  <span className="text-fuchsia-500 font-bold text-2xl">{stats.total_users}</span>*/}
+            {/*  <span className="text-gray-400 ml-2">Members</span>*/}
+            {/*</div>*/}
           </div>
         </div>
       </div>
@@ -144,14 +173,18 @@ const Home = () => {
             </SelectContent>
           </Select>
 
-          <Input
-            type="text"
-            placeholder="Location..."
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-[200px] bg-black/20 border-white/10 text-white"
-            data-testid="location-filter"
-          />
+          <Select value={location} onValueChange={setLocation}>
+  <SelectTrigger className="w-[220px] bg-black/20 border-white/10 text-white">
+    <SelectValue placeholder="Select Region" />
+  </SelectTrigger>
+  <SelectContent className="bg-zinc-950 border-white/10">
+    {REGIONS.map(region => (
+  <SelectItem key={region} value={region}>
+    {region}
+  </SelectItem>
+))}
+  </SelectContent>
+</Select>
 
           {(category || location) && (
             <Button
@@ -192,7 +225,7 @@ const Home = () => {
                   <img
                     src={listing.images[0] || 'https://images.unsplash.com/photo-1759771716328-db403c219f56?crop=entropy&cs=srgb&fm=jpg&q=85'}
                     alt={listing.title}
-                    className="listing-card-image w-full h-full object-cover blur-reveal"
+                    className="listing-card-image w-full h-full object-cover "
                   />
                   {listing.featured && (
                     <div className="absolute top-3 right-3 bg-amber-500 text-black px-3 py-1 rounded-full text-xs font-bold flex items-center space-x-1 badge-verified">
@@ -217,12 +250,18 @@ const Home = () => {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1 text-fuchsia-500 font-bold">
-                      <DollarSign className="w-4 h-4" strokeWidth={1.5} />
-                      <span>{listing.price}</span>
-                    </div>
-                    <span className="text-xs text-gray-500">{listing.views} views</span>
-                  </div>
+  <div
+    onClick={() => openWhatsApp(listing.phone)}
+    className="flex items-center space-x-2 text-green-500 font-bold cursor-pointer hover:opacity-80"
+  >
+    <MessageCircle className="w-4 h-4" strokeWidth={1.5} />
+    <span>{listing.phone}</span>
+  </div>
+
+  <span className="text-xs text-gray-500">
+    {listing.views} views
+  </span>
+</div>
                 </div>
               </div>
             ))}

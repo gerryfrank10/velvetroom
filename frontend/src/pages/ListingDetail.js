@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { MapPin, DollarSign, Eye, Heart, Mail, Phone, Sparkles, ArrowLeft } from 'lucide-react';
+import { MapPin, Eye, Heart, Mail, Phone, Sparkles, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/button';
@@ -9,6 +9,9 @@ import { Textarea } from '../components/ui/textarea';
 import AuthModal from '../components/AuthModal';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
+const CURRENCY_SYMBOL = process.env.REACT_APP_CURRENCY_SYMBOL;
+const CURRENCY_POSITION = process.env.REACT_APP_CURRENCY_POSITION;
 
 const ListingDetail = () => {
   const { id } = useParams();
@@ -121,7 +124,7 @@ const ListingDetail = () => {
                     <img
                       src={allMedia[selectedImage] || images[0]}
                       alt={listing.title}
-                      className="w-full h-full object-cover blur-reveal"
+                      className="w-full h-full object-cover "
                     />
                   )}
                   {listing.featured && (
@@ -171,24 +174,34 @@ const ListingDetail = () => {
                 </h1>
 
                 <div className="space-y-4 mb-6">
-                  <div className="flex items-center space-x-3 text-gray-300">
-                    <MapPin className="w-5 h-5 text-fuchsia-500" strokeWidth={1.5} />
-                    <span>
-                      {listing.location
-                      ? `${listing.location.city || ''}, ${listing.location.country || ''}`
-                      : 'Location not specified'}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <DollarSign className="w-5 h-5 text-fuchsia-500" strokeWidth={1.5} />
-                    <span className="text-2xl font-bold text-fuchsia-500">${listing.price}</span>
-                    <span className="text-gray-400 text-sm">per hour</span>
-                  </div>
-                  <div className="flex items-center space-x-3 text-gray-400 text-sm">
-                    <Eye className="w-4 h-4" strokeWidth={1.5} />
-                    <span>{listing.views} views</span>
-                  </div>
-                </div>
+  {/* Location */}
+  <div className="flex items-center space-x-3 text-gray-300">
+    <MapPin className="w-5 h-5 text-fuchsia-500" strokeWidth={1.5} />
+    <span>
+      {listing.location
+        ? `${listing.location.city || ''}, ${listing.location.country || ''}`
+        : 'Location not specified'}
+    </span>
+  </div>
+
+  {/* Price */}
+  <div className="flex items-center space-x-3">
+    {/* Currency symbol */}
+    <span className="text-2xl font-bold text-fuchsia-500">
+      {CURRENCY_POSITION === 'before' && CURRENCY_SYMBOL}
+      {listing.price}
+      {CURRENCY_POSITION === 'after' && ` ${CURRENCY_SYMBOL}`}
+    </span>
+
+    <span className="text-gray-400 text-sm">per hour</span>
+  </div>
+
+  {/* Views */}
+  <div className="flex items-center space-x-3 text-gray-400 text-sm">
+    <Eye className="w-4 h-4" strokeWidth={1.5} />
+    <span>{listing.views} views</span>
+  </div>
+</div>
 
                 <div className="border-t border-white/10 pt-6 mb-6">
                   <p className="text-sm text-gray-400 mb-2">Posted by</p>

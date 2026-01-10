@@ -3,6 +3,8 @@ import { HelpCircle, Book, Shield, AlertCircle, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/accordion';
 
+const TITLE = `${process.env.REACT_APP_TITLE}`;
+
 const Support = () => {
   const faqs = [
     {
@@ -31,11 +33,11 @@ const Support = () => {
     },
     {
       question: "How do payments work?",
-      answer: "All payments are handled directly between clients and service providers. DurexEthiopia does not process payments for services. We only charge for premium features like VIP membership and featured listings."
+      answer: "All payments are handled directly between clients and service providers. VelvetRoom does not process payments for services. We only charge for premium features like VIP membership and featured listings."
     },
     {
       question: "What if I encounter a problem?",
-      answer: "Contact our 24/7 support team via email at support@durexethiopia.com or use the contact form. We typically respond within 2-4 hours."
+      answer: `Contact our 24/7 support team via email at support@${TITLE}.com or use the contact form. We typically respond within 2-4 hours.`
     }
   ];
 
@@ -106,7 +108,7 @@ const Support = () => {
                 For urgent safety concerns or to report violations of our community guidelines, please contact us immediately.
               </p>
               <a 
-                href="mailto:urgent@velvetroom.com" 
+                href={`mailto:support@${TITLE}.com`}
                 className="text-fuchsia-500 hover:underline font-medium"
               >
                 urgent@velvetroom.com

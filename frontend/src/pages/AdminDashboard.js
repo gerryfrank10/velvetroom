@@ -9,6 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import AuthModal from '../components/AuthModal';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+// const HEADER = `${process.env.TITLE}`;
+// const TITLE = `Admin Dashboard - ${HEADER}`;
+
+// document.title = TITLE;
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -97,7 +101,7 @@ const AdminDashboard = () => {
         <img
           src={listing.images[0] || 'https://images.unsplash.com/photo-1759771716328-db403c219f56?crop=entropy&cs=srgb&fm=jpg&q=85'}
           alt={listing.title}
-          className="w-full h-full object-cover blur-reveal"
+          className="w-full h-full object-cover"
         />
       </div>
       <div className="p-4">

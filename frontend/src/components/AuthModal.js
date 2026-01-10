@@ -35,6 +35,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       setLoading(false);
     }
   };
+  const TITLE = `${process.env.REACT_APP_TITLE}`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" data-testid="auth-modal">
@@ -49,7 +50,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </button>
 
         <h2 className="text-3xl font-bold mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-          <span className="text-gradient">{isLogin ? 'Welcome Back' : 'Join DurexEthiopia'}</span>
+          <span className="text-gradient">{isLogin ? 'Welcome Back' : `Join ${TITLE}`}</span>
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
