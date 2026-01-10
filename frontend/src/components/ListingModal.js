@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, MapPin, Eye, Heart, Mail, Phone, Sparkles, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, MapPin, Eye, Heart, Mail, Phone, Sparkles, Clock, User, ExternalLink } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import axios from 'axios';
@@ -196,11 +197,44 @@ const ListingModal = ({ listing, isOpen, onClose }) => {
   )}
 </div>
 
+              {/* Age, Gender, Race Info */}
+              {(listing.age || listing.gender || listing.race) && (
+                <div className="flex flex-wrap gap-3">
+                  {listing.age && (
+                    <div className="flex items-center space-x-2 bg-white/5 px-3 py-2 rounded-lg">
+                      <User className="w-4 h-4 text-fuchsia-500" strokeWidth={1.5} />
+                      <span className="text-white text-sm">{listing.age} years</span>
+                    </div>
+                  )}
+                  {listing.gender && (
+                    <div className="bg-fuchsia-500/20 text-fuchsia-400 px-3 py-2 rounded-lg text-sm">
+                      {listing.gender}
+                    </div>
+                  )}
+                  {listing.race && (
+                    <div className="bg-violet-500/20 text-violet-400 px-3 py-2 rounded-lg text-sm">
+                      {listing.race}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Description */}
               <div>
                 <p className="text-sm text-gray-400 mb-2">About:</p>
                 <p className="text-gray-300 text-sm leading-relaxed">{listing.description}</p>
               </div>
+
+              {/* View Full Profile Link */}
+              <Link
+                to={`/profile/${listing.user_id}`}
+                className="flex items-center justify-center space-x-2 w-full p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors text-white"
+                data-testid="view-profile-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ExternalLink className="w-4 h-4" strokeWidth={1.5} />
+                <span>View Full Profile</span>
+              </Link>
 
               {/* Contact */}
               <div className="border-t border-white/10 pt-4">
