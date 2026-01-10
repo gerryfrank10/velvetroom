@@ -8,6 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import ListingModal from '../components/ListingModal';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const HEADER = `${process.env.REACT_APP_HEADER_TITLE}`;
+
+document.title = `${HEADER}`;
 
 const CATEGORIES = [
   'Escorts',
@@ -119,10 +122,10 @@ const Home = () => {
               <span className="text-gray-400 ml-2">Active Listings</span>
             </div>
             <div className="w-px h-6 bg-white/10"></div>
-            <div>
-              <span className="text-fuchsia-500 font-bold text-2xl">{stats.total_users}</span>
-              <span className="text-gray-400 ml-2">Members</span>
-            </div>
+            {/*<div>*/}
+            {/*  <span className="text-fuchsia-500 font-bold text-2xl">{stats.total_users}</span>*/}
+            {/*  <span className="text-gray-400 ml-2">Members</span>*/}
+            {/*</div>*/}
           </div>
         </div>
       </div>

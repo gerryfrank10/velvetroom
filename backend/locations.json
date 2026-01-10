@@ -1,46 +1,26 @@
 {
-  "UK": {
-    "England": {
-      "Dorset": ["Bournemouth - Winton", "Bournemouth - Boscombe", "Poole", "Weymouth"],
-      "London": ["Westminster", "Camden", "Islington", "Hackney", "Tower Hamlets"],
-      "Manchester": ["City Centre", "Salford", "Trafford", "Stockport"]
+  "Ethiopia": {
+    "Addis Ababa": {
+      "Addis Ketema": ["Arat Kilo", "Merkato", "Shola"],
+      "Akaki Kality": ["Akaki", "Kality", "Bole"],
+      "Bole": ["Bole Airport", "Bole Medhane Alem", "Gelan"],
+      "Gullele": ["Gullele Subcity 1", "Gullele Subcity 2"]
     },
-    "Scotland": {
-      "Edinburgh": ["Old Town", "New Town", "Leith", "Portobello"],
-      "Glasgow": ["City Centre", "West End", "Southside", "East End"]
-    }
-  },
-  "Tanzania": {
-    "Dar es Salaam": {
-      "Ilala": ["Kariakoo", "Buguruni", "Mchikichini"],
-      "Temeke": ["Chang'ombe", "Kurasini", "Mbagala"],
-      "Kinondoni": ["Masaki", "Mikocheni", "Sinza"]
+    "Amhara": {
+      "Bahir Dar": ["Giworgis", "Fasil", "Tana"],
+      "Gondar": ["Kebele 01", "Kebele 02", "Kebele 03"]
     },
-    "Arusha": {
-      "Arusha City": ["Central", "Themi", "Ngarenaro"]
-    }
-  },
-  "USA": {
-    "California": {
-      "Los Angeles": ["Hollywood", "Beverly Hills", "Santa Monica", "Downtown LA"],
-      "San Francisco": ["Mission District", "SOMA", "Marina", "Richmond"],
-      "San Diego": ["Gaslamp Quarter", "La Jolla", "Pacific Beach"]
+    "Oromia": {
+      "Adama": ["Kebele 01", "Kebele 02", "Kebele 03"],
+      "Bishoftu": ["Kebele 01", "Kebele 02"]
     },
-    "New York": {
-      "Manhattan": ["Upper East Side", "Upper West Side", "Midtown", "Downtown"],
-      "Brooklyn": ["Williamsburg", "DUMBO", "Park Slope", "Brooklyn Heights"]
-    }
-  },
-  "Germany": {
-    "Berlin": {
-      "Mitte": ["Alexanderplatz", "Unter den Linden", "Potsdamer Platz"],
-      "Kreuzberg": ["Bergmannkiez", "Graefekiez", "Wrangelkiez"]
-    }
-  },
-  "France": {
-    "Paris": {
-      "1st arrondissement": ["Louvre", "Châtelet", "Les Halles"],
-      "8th arrondissement": ["Champs-Élysées", "Madeleine", "Europe"]
+    "Tigray": {
+      "Mekelle": ["Ayder", "Semien", "Hawelti"],
+      "Axum": ["City Center", "Adwa", "Maychew"]
+    },
+    "Southern Nations": {
+      "Hawassa": ["Adi Ha", "Tabor", "Millenium"],
+      "Arba Minch": ["Ganta", "Secha", "Shecha"]
     }
   }
 }

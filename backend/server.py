@@ -18,6 +18,8 @@ from PIL import Image, ImageDraw, ImageFont
 import cv2
 import subprocess
 import aiofiles
+from PIL import Image, ImageDraw, ImageFont
+from fastapi import BackgroundTasks
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -207,96 +209,129 @@ async def get_me(current_user: dict = Depends(get_current_user)):
 
 # ============ FILE UPLOAD ============
 
+
+
 def add_watermark_to_image(image_path: Path) -> Path:
-    """Add watermark to image"""
     try:
-        img = Image.open(image_path)
+        img = Image.open(image_path).convert("RGBA")
         width, height = img.size
-        
-        # Create watermark
-        draw = ImageDraw.Draw(img)
-        watermark_text = "VelvetRoom.com"
-        
-        # Calculate position (bottom right)
-        font_size = int(min(width, height) * 0.05)
+
+        overlay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(overlay)
+
+        watermark_text = "velvetroom.com"
+
+        # Scale font nicely
+        font_size = max(24, int(min(width, height) * 0.08))
+
         try:
-            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", font_size)
-        except:
+            font = ImageFont.truetype(
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+                font_size
+            )
+        except Exception:
             font = ImageFont.load_default()
-        
-        # Get text bounding box
+
+        # ✅ Correct Pillow 10+ measurement
         bbox = draw.textbbox((0, 0), watermark_text, font=font)
-        text_width = bbox[2] - bbox[0]
-        text_height = bbox[3] - bbox[1]
-        
-        # Position at bottom right with padding
-        x = width - text_width - 20
-        y = height - text_height - 20
-        
-        # Draw semi-transparent background
-        padding = 10
+        text_w = bbox[2] - bbox[0]
+        text_h = bbox[3] - bbox[1]
+
+        # ✅ CENTER POSITION
+        x = (width - text_w) // 2
+        y = (height - text_h) // 2
+
+        # Semi-transparent background box (important for visibility)
+        padding = 20
         draw.rectangle(
-            [x - padding, y - padding, x + text_width + padding, y + text_height + padding],
-            fill=(0, 0, 0, 180)
+            (
+                x - padding,
+                y - padding,
+                x + text_w + padding,
+                y + text_h + padding
+            ),
+            fill=(0, 0, 0, 120)
         )
-        
-        # Draw text
-        draw.text((x, y), watermark_text, fill=(217, 70, 239, 255), font=font)
-        
-        # Save
-        img.save(image_path)
+
+        # Watermark text
+        draw.text(
+            (x, y),
+            watermark_text,
+            fill=(255, 255, 255, 200),
+            font=font
+        )
+
+        # Merge layers
+        watermarked = Image.alpha_composite(img, overlay)
+
+        # Save optimized (fast + good quality)
+        watermarked.convert("RGB").save(
+            image_path,
+            quality=85,
+            optimize=True
+        )
+
         return image_path
+
     except Exception as e:
-        logger.error(f"Failed to add watermark to image: {e}")
+        logger.error(f"Image watermark failed: {e}")
         return image_path
 
 def add_watermark_to_video(video_path: Path) -> Path:
-    """Add watermark to video using ffmpeg"""
     try:
-        output_path = video_path.parent / f"watermarked_{video_path.name}"
-        
-        # Use ffmpeg to add text watermark
-        watermark_text = "VelvetRoom.com"
-        
+        output_path = video_path.with_suffix(".wm.mp4")
+
         cmd = [
-            'ffmpeg', '-i', str(video_path),
-            '-vf', f"drawtext=text='{watermark_text}':x=w-tw-20:y=h-th-20:fontsize=24:fontcolor=white@0.8:box=1:boxcolor=black@0.5:boxborderw=5",
-            '-codec:a', 'copy',
-            '-y',
-            str(output_path)
+            "ffmpeg",
+            "-i", str(video_path),
+            "-vf",
+            "drawtext=text='VelvetRoom':x=w-tw-20:y=h-th-20:"
+            "fontsize=24:fontcolor=white@0.7:box=1:boxcolor=black@0.4",
+            "-preset", "veryfast",
+            "-codec:a", "copy",
+            "-y",
+            str(output_path),
         ]
-        
-        subprocess.run(cmd, check=True, capture_output=True)
-        
-        # Replace original with watermarked
+
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
         video_path.unlink()
         output_path.rename(video_path)
-        
+
         return video_path
+
     except Exception as e:
-        logger.error(f"Failed to add watermark to video: {e}")
+        logger.error(f"Video watermark failed: {e}")
         return video_path
 
 @api_router.post("/upload")
-async def upload_file(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
-    # Generate unique filename
+async def upload_file(
+    file: UploadFile = File(...),
+    background_tasks: BackgroundTasks = BackgroundTasks(),
+    current_user: dict = Depends(get_current_user),
+):
     file_ext = Path(file.filename).suffix.lower()
     filename = f"{uuid.uuid4()}{file_ext}"
     file_path = UPLOADS_DIR / filename
 
-    chunk_size = 8 * 1024 * 1024  # 8MB (much faster)
+    chunk_size = 8 * 1024 * 1024  # 8MB
 
     async with aiofiles.open(file_path, "wb") as out_file:
         while chunk := await file.read(chunk_size):
             await out_file.write(chunk)
 
-    backend_url = os.environ.get(
-        "BACKEND_URL", "http://durexethiopia.com"
-    )
+    # 🔥 Watermark in background (NON-BLOCKING)
+    if file_ext in {".jpg", ".jpeg", ".png", ".webp"}:
+        background_tasks.add_task(add_watermark_to_image, file_path)
+
+    elif file_ext in {".mp4", ".mov", ".avi", ".webm"}:
+        background_tasks.add_task(add_watermark_to_video, file_path)
+
+    backend_url = os.environ.get("BACKEND_URL", "https://durexethiopia.com")
 
     return {
         "url": f"{backend_url}/uploads/{filename}",
-        "type": "video" if file_ext in [".mp4", ".mov", ".avi", ".webm"] else "image"
+        "type": "video" if file_ext in {".mp4", ".mov", ".avi", ".webm"} else "image",
     }
 
 # ============ LISTING ROUTES ============
