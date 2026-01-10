@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Search, MapPin, DollarSign, Star, Sparkles } from 'lucide-react';
+import { Search, MapPin, MessageCircle, Star, Sparkles } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
@@ -9,6 +9,7 @@ import ListingModal from '../components/ListingModal';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const HEADER = `${process.env.REACT_APP_HEADER_TITLE}`;
+const TITLE = `${process.env.REACT_APP_TITLE}`;
 
 const CURRENCY_SYMBOL = process.env.REACT_APP_CURRENCY_SYMBOL || '$';
 const CURRENCY_POSITION = process.env.REACT_APP_CURRENCY_POSITION || 'before';
@@ -19,6 +20,17 @@ const formatPrice = (amount) =>
     : `${amount} ${CURRENCY_SYMBOL}`;
 
 document.title = `${HEADER}`;
+
+const openWhatsApp = (phone) => {
+  if (!phone) return;
+
+  const message = encodeURIComponent(
+    `Hi, I saw your profile on ${TITLE} and I’d like to chat.`
+  );
+
+  const url = `https://wa.me/${phone}?text=${message}`;
+  window.open(url, '_blank');
+};
 
 const CATEGORIES = [
   'Escorts',
@@ -228,9 +240,14 @@ const Home = () => {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-  <div className="text-fuchsia-500 font-bold">
-    {formatPrice(listing.price)}
+  <div
+    onClick={() => openWhatsApp(listing.phone)}
+    className="flex items-center space-x-2 text-green-500 font-bold cursor-pointer hover:opacity-80"
+  >
+    <MessageCircle className="w-4 h-4" strokeWidth={1.5} />
+    <span>{listing.phone}</span>
   </div>
+
   <span className="text-xs text-gray-500">
     {listing.views} views
   </span>
