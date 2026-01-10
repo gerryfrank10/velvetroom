@@ -343,6 +343,9 @@ async def upload_file(
 async def create_listing(
     title: str = Form(...),
     description: str = Form(...),
+    age: Optional[int] = Form(None),
+    race: Optional[str] = Form(None),
+    gender: Optional[str] = Form(None),
     price: float = Form(...),
     location: str = Form(...),
     category: str = Form(...),
@@ -360,6 +363,9 @@ async def create_listing(
     listing = Listing(
         title=title,
         description=description,
+        age=age,
+        race=race,
+        gender=gender,
         price=price,
         location=location_obj,
         category=category,
