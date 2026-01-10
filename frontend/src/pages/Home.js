@@ -10,6 +10,14 @@ import ListingModal from '../components/ListingModal';
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const HEADER = `${process.env.REACT_APP_HEADER_TITLE}`;
 
+const CURRENCY_SYMBOL = process.env.REACT_APP_CURRENCY_SYMBOL || '$';
+const CURRENCY_POSITION = process.env.REACT_APP_CURRENCY_POSITION || 'before';
+
+const formatPrice = (amount) =>
+  CURRENCY_POSITION === 'before'
+    ? `${CURRENCY_SYMBOL}${amount}`
+    : `${amount} ${CURRENCY_SYMBOL}`;
+
 document.title = `${HEADER}`;
 
 const CATEGORIES = [
@@ -220,12 +228,13 @@ const Home = () => {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1 text-fuchsia-500 font-bold">
-                      <DollarSign className="w-4 h-4" strokeWidth={1.5} />
-                      <span>{listing.price}</span>
-                    </div>
-                    <span className="text-xs text-gray-500">{listing.views} views</span>
-                  </div>
+  <div className="text-fuchsia-500 font-bold">
+    {formatPrice(listing.price)}
+  </div>
+  <span className="text-xs text-gray-500">
+    {listing.views} views
+  </span>
+</div>
                 </div>
               </div>
             ))}
