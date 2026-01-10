@@ -28,6 +28,9 @@ const AVAILABLE_SERVICES = [
   'Other Services'
 ];
 
+const GENDERS = ['Female', 'Male', 'Trans', 'Non-Binary', 'Other'];
+const RACES = ['African', 'Asian', 'Caucasian', 'Hispanic/Latina', 'Middle Eastern', 'Mixed', 'Other'];
+
 const PostListing = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -42,7 +45,10 @@ const PostListing = () => {
     location: {},
     category: '',
     phone: '',
-    email: ''
+    email: '',
+    age: '',
+    race: '',
+    gender: ''
   });
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
@@ -150,6 +156,9 @@ const PostListing = () => {
       });
       submitData.append('services', JSON.stringify(services));
       submitData.append('pricing_tiers', JSON.stringify(validTiers));
+      if (formData.age) submitData.append('age', formData.age);
+      if (formData.race) submitData.append('race', formData.race);
+      if (formData.gender) submitData.append('gender', formData.gender);
 
       const response = await axios.post(`${API}/listings`, submitData);
       toast.success('Listing submitted for review!');
@@ -221,6 +230,65 @@ const PostListing = () => {
                 placeholder="Describe your service in detail..."
                 data-testid="description-textarea"
               />
+            </div>
+
+            {/* Age, Gender, Race */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="age" className="text-gray-300">Age</Label>
+                <Input
+                  id="age"
+                  type="number"
+                  min="18"
+                  max="99"
+                  value={formData.age}
+                  onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                  required
+                  className="bg-black/20 border-white/10 text-white mt-2"
+                  placeholder="25"
+                  data-testid="age-input"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="gender" className="text-gray-300">Gender</Label>
+                <Select
+                  value={formData.gender}
+                  onValueChange={(value) => setFormData({ ...formData, gender: value })}
+                  required
+                >
+                  <SelectTrigger className="bg-black/20 border-white/10 text-white mt-2" data-testid="gender-select">
+                    <SelectValue placeholder="Select gender" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-950 border-white/10">
+                    {GENDERS.map((g) => (
+                      <SelectItem key={g} value={g} className="text-white">
+                        {g}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="race" className="text-gray-300">Ethnicity</Label>
+                <Select
+                  value={formData.race}
+                  onValueChange={(value) => setFormData({ ...formData, race: value })}
+                  required
+                >
+                  <SelectTrigger className="bg-black/20 border-white/10 text-white mt-2" data-testid="race-select">
+                    <SelectValue placeholder="Select ethnicity" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-950 border-white/10">
+                    {RACES.map((r) => (
+                      <SelectItem key={r} value={r} className="text-white">
+                        {r}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Price & Category */}
