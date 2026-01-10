@@ -95,6 +95,9 @@ class Listing(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
     description: str
+    age: Optional[int] = None
+    race: Optional[str] = None
+    gender: Optional[str] = None
     price: float
     pricing_tiers: List[dict] = []  # [{"hours": 1, "price": 100}, {"hours": 2, "price": 180}]
     services: List[str] = []  # ["Massage", "Companionship", "Travel"]
@@ -340,6 +343,9 @@ async def upload_file(
 async def create_listing(
     title: str = Form(...),
     description: str = Form(...),
+    age: Optional[int] = Form(None),
+    race: Optional[str] = Form(None),
+    gender: Optional[str] = Form(None),
     price: float = Form(...),
     location: str = Form(...),
     category: str = Form(...),
@@ -357,6 +363,9 @@ async def create_listing(
     listing = Listing(
         title=title,
         description=description,
+        age=age,
+        race=race,
+        gender=gender,
         price=price,
         location=location_obj,
         category=category,
@@ -380,17 +389,32 @@ async def create_listing(
 async def get_listings(
     status: str = "approved",
     category: Optional[str] = None,
+    gender: Optional[str] = None,
+    race: Optional[str] = None,
+    min_age: Optional[int] = None,
+    max_age: Optional[int] = None,
     location: Optional[str] = None,
     min_price: Optional[float] = None,
     max_price: Optional[float] = None,
     search: Optional[str] = None,
     featured: Optional[bool] = None,
-    limit: int = 50
+    page: int = 1,
+    limit: int = 20
 ):
     query = {"status": status}
     
     if category:
         query["category"] = category
+    if gender:
+        query["gender"] = gender
+    if race:
+        query["race"] = race
+    if min_age is not None:
+        query["age"] = query.get("age", {})
+        query["age"]["$gte"] = min_age
+    if max_age is not None:
+        query["age"] = query.get("age", {})
+        query["age"]["$lte"] = max_age
     if location:
         query["$or"] = [
             {"location.city": {"$regex": location, "$options": "i"}},
@@ -412,13 +436,44 @@ async def get_listings(
     if featured is not None:
         query["featured"] = featured
     
-    listings = await db.listings.find(query, {"_id": 0}).sort("created_at", -1).limit(limit).to_list(limit)
+    # Calculate skip for pagination
+    skip = (page - 1) * limit
+    
+    listings = await db.listings.find(query, {"_id": 0}).sort("created_at", -1).skip(skip).limit(limit).to_list(limit)
     
     for listing in listings:
         if isinstance(listing["created_at"], str):
             listing["created_at"] = datetime.fromisoformat(listing["created_at"])
     
     return listings
+
+@api_router.get("/listings/count")
+async def get_listings_count(
+    status: str = "approved",
+    category: Optional[str] = None,
+    gender: Optional[str] = None,
+    race: Optional[str] = None,
+    min_age: Optional[int] = None,
+    max_age: Optional[int] = None
+):
+    """Get total count of listings for pagination"""
+    query = {"status": status}
+    
+    if category:
+        query["category"] = category
+    if gender:
+        query["gender"] = gender
+    if race:
+        query["race"] = race
+    if min_age is not None:
+        query["age"] = query.get("age", {})
+        query["age"]["$gte"] = min_age
+    if max_age is not None:
+        query["age"] = query.get("age", {})
+        query["age"]["$lte"] = max_age
+    
+    total = await db.listings.count_documents(query)
+    return {"total": total}
 
 @api_router.get("/listings/{listing_id}", response_model=Listing)
 async def get_listing(listing_id: str):
@@ -641,6 +696,81 @@ async def toggle_vip_status(
     )
     
     return {"message": f"VIP status granted for {days} days"}
+
+@api_router.put("/admin/users/{user_id}/status")
+async def update_user_status(
+    user_id: str,
+    status: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Change user status to active, pending, or suspended"""
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    if status not in ["active", "pending", "suspended"]:
+        raise HTTPException(status_code=400, detail="Invalid status")
+    
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"status": status}}
+    )
+    
+    # If user is suspended, also suspend all their listings
+    if status == "suspended":
+        await db.listings.update_many(
+            {"user_id": user_id},
+            {"$set": {"status": "rejected"}}
+        )
+    
+    return {"message": f"User status updated to {status}"}
+
+@api_router.put("/admin/listings/{listing_id}/edit")
+async def admin_edit_listing(
+    listing_id: str,
+    title: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
+    age: Optional[int] = Form(None),
+    race: Optional[str] = Form(None),
+    gender: Optional[str] = Form(None),
+    price: Optional[float] = Form(None),
+    category: Optional[str] = Form(None),
+    status: Optional[str] = Form(None),
+    featured: Optional[bool] = Form(None),
+    current_user: dict = Depends(get_current_user)
+):
+    """Admin can edit any field of a listing"""
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    update_data = {}
+    if title is not None:
+        update_data["title"] = title
+    if description is not None:
+        update_data["description"] = description
+    if age is not None:
+        update_data["age"] = age
+    if race is not None:
+        update_data["race"] = race
+    if gender is not None:
+        update_data["gender"] = gender
+    if price is not None:
+        update_data["price"] = price
+    if category is not None:
+        update_data["category"] = category
+    if status is not None:
+        update_data["status"] = status
+    if featured is not None:
+        update_data["featured"] = featured
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    await db.listings.update_one(
+        {"id": listing_id},
+        {"$set": update_data}
+    )
+    
+    return {"message": "Listing updated successfully"}
 
 @api_router.get("/admin/listings", response_model=List[Listing])
 async def get_admin_listings(
