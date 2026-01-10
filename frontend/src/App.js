@@ -24,6 +24,8 @@ function App() {
           <div className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/category/:categoryType" element={<Home />} />
+              <Route path="/category/:categoryType/:subCategory" element={<Home />} />
               <Route path="/listing/:id" element={<ListingDetail />} />
               <Route path="/post" element={<PostListing />} />
               <Route path="/dashboard" element={<Dashboard />} />
