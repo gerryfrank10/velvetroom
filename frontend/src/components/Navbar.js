@@ -130,6 +130,7 @@ const Navbar = () => {
     logout();
     navigate('/');
   };
+  const TITLE = `${process.env.REACT_APP_TITLE}`;
 
   const handleCategoryClick = (path) => {
     navigate(path);
@@ -148,8 +149,8 @@ const Navbar = () => {
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-fuchsia-500 to-violet-600 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold hidden sm:block" style={{ fontFamily: 'Playfair Display, serif' }}>
-                <span className="text-gradient">DurexEthiopia</span>
+              <span className="text-2xl font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>
+                <span className="text-gradient">{TITLE}</span>
               </span>
             </Link>
 
