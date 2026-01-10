@@ -39,6 +39,12 @@ const CATEGORIES = [
   'Virtual',
   'Other'
 ];
+const COUNTRY_CODE = process.env.REACT_APP_COUNTRY_CODE || 'TZ';
+
+const REGIONS =
+  process.env[`REACT_APP_${COUNTRY_CODE}_REGIONS`]
+    ?.split(',')
+    .map(r => r.trim()) || [];
 
 const Home = () => {
   const [listings, setListings] = useState([]);
@@ -167,14 +173,18 @@ const Home = () => {
             </SelectContent>
           </Select>
 
-          <Input
-            type="text"
-            placeholder="Location..."
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-[200px] bg-black/20 border-white/10 text-white"
-            data-testid="location-filter"
-          />
+          <Select value={location} onValueChange={setLocation}>
+  <SelectTrigger className="w-[220px] bg-black/20 border-white/10 text-white">
+    <SelectValue placeholder="Select Region" />
+  </SelectTrigger>
+  <SelectContent className="bg-zinc-950 border-white/10">
+    {REGIONS.map(region => (
+  <SelectItem key={region} value={region}>
+    {region}
+  </SelectItem>
+))}
+  </SelectContent>
+</Select>
 
           {(category || location) && (
             <Button

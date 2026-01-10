@@ -392,7 +392,12 @@ async def get_listings(
     if category:
         query["category"] = category
     if location:
-        query["location"] = {"$regex": location, "$options": "i"}
+        query["$or"] = [
+            {"location.city": {"$regex": location, "$options": "i"}},
+            {"location.district": {"$regex": location, "$options": "i"}},
+            {"location.region": {"$regex": location, "$options": "i"}},
+            {"location.country": {"$regex": location, "$options": "i"}},
+        ]
     if min_price is not None:
         query["price"] = query.get("price", {})
         query["price"]["$gte"] = min_price
