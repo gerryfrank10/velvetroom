@@ -697,6 +697,81 @@ async def toggle_vip_status(
     
     return {"message": f"VIP status granted for {days} days"}
 
+@api_router.put("/admin/users/{user_id}/status")
+async def update_user_status(
+    user_id: str,
+    status: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Change user status to active, pending, or suspended"""
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    if status not in ["active", "pending", "suspended"]:
+        raise HTTPException(status_code=400, detail="Invalid status")
+    
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"status": status}}
+    )
+    
+    # If user is suspended, also suspend all their listings
+    if status == "suspended":
+        await db.listings.update_many(
+            {"user_id": user_id},
+            {"$set": {"status": "rejected"}}
+        )
+    
+    return {"message": f"User status updated to {status}"}
+
+@api_router.put("/admin/listings/{listing_id}/edit")
+async def admin_edit_listing(
+    listing_id: str,
+    title: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
+    age: Optional[int] = Form(None),
+    race: Optional[str] = Form(None),
+    gender: Optional[str] = Form(None),
+    price: Optional[float] = Form(None),
+    category: Optional[str] = Form(None),
+    status: Optional[str] = Form(None),
+    featured: Optional[bool] = Form(None),
+    current_user: dict = Depends(get_current_user)
+):
+    """Admin can edit any field of a listing"""
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    update_data = {}
+    if title is not None:
+        update_data["title"] = title
+    if description is not None:
+        update_data["description"] = description
+    if age is not None:
+        update_data["age"] = age
+    if race is not None:
+        update_data["race"] = race
+    if gender is not None:
+        update_data["gender"] = gender
+    if price is not None:
+        update_data["price"] = price
+    if category is not None:
+        update_data["category"] = category
+    if status is not None:
+        update_data["status"] = status
+    if featured is not None:
+        update_data["featured"] = featured
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    await db.listings.update_one(
+        {"id": listing_id},
+        {"$set": update_data}
+    )
+    
+    return {"message": "Listing updated successfully"}
+
 @api_router.get("/admin/listings", response_model=List[Listing])
 async def get_admin_listings(
     status: str = "pending",
