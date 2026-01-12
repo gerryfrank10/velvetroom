@@ -222,7 +222,7 @@ def add_watermark_to_image(image_path: Path) -> Path:
         overlay = Image.new("RGBA", img.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(overlay)
 
-        watermark_text = "velvetroom.com"
+        watermark_text = "velvetroom"
 
         # Scale font nicely
         font_size = max(24, int(min(width, height) * 0.08))
