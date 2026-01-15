@@ -675,6 +675,10 @@ async def delete_user(user_id: str, current_user: dict = Depends(get_current_use
     
     return {"message": "User and all associated data deleted"}
 
+
+# ============ ADMIN LISTING MODERATION ============
+# Admin can grant VIP status to users
+# Not yet working on frontend
 @api_router.post("/admin/users/{user_id}/vip")
 async def toggle_vip_status(
     user_id: str,
